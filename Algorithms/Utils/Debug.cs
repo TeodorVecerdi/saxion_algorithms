@@ -11,7 +11,7 @@ namespace game.utils {
     /// </summary>
     public static class Debug {
         private const string LogFormat = " at {0}.{1}:{2} ({3}:line {2})";
-        
+
         #region File Logger
         public static bool IsFileLoggerEnabled { get; private set; }
         private static StreamWriter logger;
@@ -22,21 +22,17 @@ namespace game.utils {
                 if (!Directory.Exists("logs")) {
                     Directory.CreateDirectory("logs");
                 }
-                loggerFileStream = new FileStream($"logs/log_{Time.now}.txt", FileMode.Create, FileAccess.Write);
+                var timeNow = $"{DateTime.UtcNow:dd-MM-yyyy-hh:mm:ss_zz}";
+                loggerFileStream = new FileStream($"logs/log_{timeNow}.txt", FileMode.Create, FileAccess.Write);
                 logger = new StreamWriter(loggerFileStream, Encoding.UTF8, 128) {AutoFlush = true};
-                var sb = new StringBuilder();
-                sb.Append(new string('=', 23));
-                sb.Append("System Information");
-                sb.Append(new string('=', 23));
-                sb.Append("\n");
-                sb.AppendLine($"{SystemInformation()}");
-                sb.AppendLine(new string('=', 64));
-                sb.Append("\n");
-                sb.Append(new string('=', 24));
-                sb.Append("Application Logs");
-                sb.Append(new string('=', 24));
-                sb.Append("\n");
-                logger.WriteLine(sb.ToString());
+                var sysInf = $@"
+Logging started at {timeNow}
+
+{new string('=', 23)}System Information{new string('=', 23)}
+{SystemInformation()}
+{new string('=', 64)}
+{new string('=', 24)}Application Logs{new string('=', 24)}\n";
+                logger.WriteLine(sysInf);
             } else {
                 if (logger != null) {
                     logger.Flush();
@@ -44,16 +40,17 @@ namespace game.utils {
                     logger = StreamWriter.Null;
                 }
             }
+
             IsFileLoggerEnabled = enabled;
         }
 
         public static void FinalizeLogger() {
-            if(!IsFileLoggerEnabled || !logger.BaseStream.CanWrite) return;
+            if (!IsFileLoggerEnabled || !logger.BaseStream.CanWrite) return;
             logger.WriteLine(new string('=', 64));
             logger.Close();
             IsFileLoggerEnabled = false;
         }
-        
+
         private static string SystemInformation() {
             var stringBuilder = new StringBuilder(string.Empty);
             try {
@@ -63,6 +60,7 @@ namespace game.utils {
                 stringBuilder.AppendFormat("ProcessorCount:  {0}\n", Environment.ProcessorCount);
                 stringBuilder.AppendFormat("UserDomainName:  {0}\n", Environment.UserDomainName);
                 stringBuilder.AppendFormat("UserName: {0}\n", Environment.UserName);
+
                 //Drives
                 stringBuilder.AppendFormat("LogicalDrives:\n");
                 foreach (var driveInfo1 in DriveInfo.GetDrives()) {
@@ -76,6 +74,7 @@ namespace game.utils {
                         // exceptions are ignored 
                     }
                 }
+
                 stringBuilder.AppendFormat("SystemPageSize:  {0}\n", Environment.SystemPageSize);
                 stringBuilder.AppendFormat("Version:  {0}", Environment.Version);
             } catch {

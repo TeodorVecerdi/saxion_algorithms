@@ -1,4 +1,4 @@
-namespace game {
+namespace algorithms {
     public static class Globals {
         public const bool FULLSCREEN = true;
         public const bool PIXEL_ART = false;

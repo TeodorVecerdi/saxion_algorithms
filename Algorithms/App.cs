@@ -1,38 +1,14 @@
 using System;
 using game.utils;
 using GXPEngine;
-using GXPEngine.Core;
 using Debug = game.utils.Debug;
 
-namespace game {
+namespace algorithms {
     public class App : Game {
-        private readonly MouseCursor mouseCursor;
-        private readonly NetworkManager networkManager;
-        private readonly SceneManager sceneManager;
-        private readonly SoundManager soundManager;
-
         public App() : base(Globals.WIDTH, Globals.HEIGHT, Globals.FULLSCREEN, Globals.VSYNC, pPixelArt: Globals.PIXEL_ART, windowTitle: Globals.WINDOW_TITLE) {
-            // Debug.LogWarning("TODO: Enable logging on server");
-            // Debug.LogWarning("TODO: Add website to server (using express)");
-            // Debug.LogWarning("TODO: Change scenes to keep static assets loaded and just hidden off-screen instead of reloading assets every time there is a scene change");
-            // Environment.Exit(0);
-            // targetFps = 60;
             Debug.EnableFileLogger(true);
-            ShowMouse(false);
+            ShowMouse(true);
             SetupInput();
-            
-
-            networkManager = NetworkManager.Instance;
-            sceneManager = SceneManager.Instance;
-            mouseCursor = MouseCursor.Instance;
-            soundManager = SoundManager.Instance;
-
-            AddChild(networkManager);
-            AddChild(sceneManager);
-            AddChild(soundManager);
-            AddChild(mouseCursor);
-            
-            sceneManager.LoadScene("Loading");
         }
 
         private void SetupInput() {
