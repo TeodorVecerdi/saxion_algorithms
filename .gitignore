@@ -1,0 +1,10 @@
+# Project exclude paths
+
+Algorithms/bin/
+GXPEngine/bin/
+Algorithms/obj/
+GXPEngine/obj/
+packages/
+.idea/
+.vs/
+.idea

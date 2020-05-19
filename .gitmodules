@@ -1,0 +1,3 @@
+[submodule "GXPEngine"]
+	path = GXPEngine
+	url = https://github.com/TeodorVecerdi/GXPEngine.git
