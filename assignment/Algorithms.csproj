@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{66F25691-4FBE-4BCD-A610-0E740B8F3CED}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Saxion.CMGT.Algorithms</RootNamespace>
+    <AssemblyName>dcg</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\Camera.cs">
+      <Link>GXPEngine\AddOns\Camera.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\EasyDraw.cs">
+      <Link>GXPEngine\AddOns\EasyDraw.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\HierarchyManager.cs">
+      <Link>GXPEngine\AddOns\HierarchyManager.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\Settings.cs">
+      <Link>GXPEngine\AddOns\Settings.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\TiledMapParser.cs">
+      <Link>GXPEngine\AddOns\TiledMapParser.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AddOns\Window.cs">
+      <Link>GXPEngine\AddOns\Window.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\AnimationSprite.cs">
+      <Link>GXPEngine\AnimationSprite.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Canvas.cs">
+      <Link>GXPEngine\Canvas.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\BlendMode.cs">
+      <Link>GXPEngine\Core\BlendMode.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\BoxCollider.cs">
+      <Link>GXPEngine\Core\BoxCollider.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\Collider.cs">
+      <Link>GXPEngine\Core\Collider.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\GLContext.cs">
+      <Link>GXPEngine\Core\GLContext.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\Rectangle.cs">
+      <Link>GXPEngine\Core\Rectangle.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\Texture2D.cs">
+      <Link>GXPEngine\Core\Texture2D.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\Transformable.cs">
+      <Link>GXPEngine\Core\Transformable.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Core\Vector2.cs">
+      <Link>GXPEngine\Core\Vector2.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\FMOD\FMOD.cs">
+      <Link>GXPEngine\FMOD\FMOD.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Game.cs">
+      <Link>GXPEngine\Game.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\GameObject.cs">
+      <Link>GXPEngine\GameObject.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Managers\CollisionManager.cs">
+      <Link>GXPEngine\Managers\CollisionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Managers\UpdateManager.cs">
+      <Link>GXPEngine\Managers\UpdateManager.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Mathf.cs">
+      <Link>GXPEngine\Mathf.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\OpenGL\GL.cs">
+      <Link>GXPEngine\OpenGL\GL.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Pivot.cs">
+      <Link>GXPEngine\Pivot.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Sound.cs">
+      <Link>GXPEngine\Sound.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\SoundChannel.cs">
+      <Link>GXPEngine\SoundChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Sprite.cs">
+      <Link>GXPEngine\Sprite.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Utils\Input.cs">
+      <Link>GXPEngine\Utils\Input.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Utils\Key.cs">
+      <Link>GXPEngine\Utils\Key.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Utils\MouseHandler.cs">
+      <Link>GXPEngine\Utils\MouseHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Utils\Time.cs">
+      <Link>GXPEngine\Utils\Time.cs</Link>
+    </Compile>
+    <Compile Include="..\gxpengine\gxpengine\GXPEngine\Utils\Utils.cs">
+      <Link>GXPEngine\Utils\Utils.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sources\Assignment\Dungeon\Door.cs" />
+    <Compile Include="sources\Assignment\Dungeon\Dungeon.cs" />
+    <Compile Include="sources\Assignment\Dungeon\Room.cs" />
+    <Compile Include="sources\AlgorithmsAssignment.cs" />
+    <Compile Include="sources\Assignment\Dungeon\SampleDungeon.cs" />
+    <Compile Include="sources\Assignment\NodeGraph\SampleDungeonNodeGraph.cs" />
+    <Compile Include="sources\Assignment\PathFinding\SamplePathFinder.cs" />
+    <Compile Include="sources\Assignment\Agent\NodeGraphAgent.cs" />
+    <Compile Include="sources\Assignment\Agent\SampleNodeGraphAgent.cs" />
+    <Compile Include="sources\Assignment\Tiles\SampleTiledView.cs" />
+    <Compile Include="sources\Assignment\NodeGraph\Node.cs" />
+    <Compile Include="sources\Assignment\NodeGraph\NodeGraph.cs" />
+    <Compile Include="sources\Assignment\Tiles\TileType.cs" />
+    <Compile Include="sources\Assignment\Tiles\TiledView.cs" />
+    <Compile Include="sources\Program.cs" />
+    <Compile Include="sources\Assignment\PathFinding\PathFinder.cs" />
+    <Compile Include="sources\Util\Grid.cs" />
+    <Compile Include="sources\Util\NodeLabelDrawer.cs" />
+    <Compile Include="sources\Util\RectangleExtensions.cs" />
+    <Compile Include="sources\Util\Vec2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="sources\Solution\readme.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
