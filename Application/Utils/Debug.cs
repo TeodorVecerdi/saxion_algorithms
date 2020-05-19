@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using GXPEngine;
 
-namespace game.utils {
+namespace root.utils {
     /// <summary>
     ///     Debug class with utility methods: Log, LogWarning, LogError and Assert
     /// </summary>

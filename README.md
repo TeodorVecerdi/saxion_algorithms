@@ -1,3 +1,3 @@
 # General
-Repository for the Algorithms course at Saxion
+Template repository for GXPEngine based projects
 
