@@ -22,7 +22,7 @@ namespace game.utils {
                 if (!Directory.Exists("logs")) {
                     Directory.CreateDirectory("logs");
                 }
-                var timeNow = $"{DateTime.UtcNow:dd-MM-yyyy-hh:mm:ss_zz}";
+                var timeNow = $"{DateTime.UtcNow:dd-MM-yyyy-hh-mm-ss_zz}";
                 loggerFileStream = new FileStream($"logs/log_{timeNow}.txt", FileMode.Create, FileAccess.Write);
                 logger = new StreamWriter(loggerFileStream, Encoding.UTF8, 128) {AutoFlush = true};
                 var sysInf = $@"
