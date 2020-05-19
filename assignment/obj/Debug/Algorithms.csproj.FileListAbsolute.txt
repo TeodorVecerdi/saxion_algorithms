@@ -1,7 +1,0 @@
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe.config
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.exe
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\bin\Debug\dcg.pdb
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csproj.CoreCompileInputs.cache
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\dcg.exe
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\dcg.pdb
-D:\data\Dropbox\HW\saxion\courses_cmgt\1_4_algorithms\102_assignments\cmgt.algorithms.student\assignment\obj\Debug\Algorithms.csprojAssemblyReference.cache
