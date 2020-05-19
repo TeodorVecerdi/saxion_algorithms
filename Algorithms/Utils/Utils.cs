@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace root.utils {
+namespace application.utils {
     public static class Utils {
         /// <summary>
         ///     Returns <paramref name="value" /> mapped from one range [<paramref name="minA" />, <paramref name="maxA" />] to

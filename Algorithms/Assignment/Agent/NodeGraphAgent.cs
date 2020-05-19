@@ -1,5 +1,5 @@
 ﻿using GXPEngine;
-using System.Diagnostics;
+using Debug = application.utils.Debug;
 
 /**
  * NodeGraphAgent provides a starting point for your own agents that would like to navigate the nodegraph.

@@ -1,0 +1,10 @@
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\bin\Debug\Application.exe.config
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\bin\Debug\Application.exe
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\bin\Debug\Application.pdb
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\bin\Debug\GXPEngine.dll
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\bin\Debug\GXPEngine.pdb
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\obj\Debug\Algorithms.csprojAssemblyReference.cache
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\obj\Debug\Algorithms.csproj.CoreCompileInputs.cache
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\obj\Debug\Algorithms.csproj.CopyComplete
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\obj\Debug\Application.exe
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Algorithms\obj\Debug\Application.pdb

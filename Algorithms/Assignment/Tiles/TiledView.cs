@@ -1,6 +1,7 @@
 using GXPEngine;
 using GXPEngine.Core;
 using System.Diagnostics;
+using Debug = application.utils.Debug;
 
 /**
  * A TileView class that allows you to set a 2D array of tiles and render them on screen.

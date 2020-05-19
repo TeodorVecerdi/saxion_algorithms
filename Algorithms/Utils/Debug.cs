@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using GXPEngine;
 
-namespace root.utils {
+namespace application.utils {
     /// <summary>
     ///     Debug class with utility methods: Log, LogWarning, LogError and Assert
     /// </summary>

@@ -1,4 +1,4 @@
-namespace root {
+namespace application {
     public static class Globals {
         public const bool FULLSCREEN = false;
         public const bool PIXEL_ART = false;

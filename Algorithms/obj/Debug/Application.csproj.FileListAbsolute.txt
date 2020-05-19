@@ -1,0 +1,2 @@
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Application\obj\Debug\Application.csprojAssemblyReference.cache
+C:\Users\TeodorVecerdi\Desktop\Development\saxion\dotnet\algorithms\Application\obj\Debug\Application.csproj.CoreCompileInputs.cache
