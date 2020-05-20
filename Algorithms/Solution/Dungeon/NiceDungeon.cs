@@ -20,11 +20,12 @@ namespace application {
             roomDefinitions = new List<RoomDefinition>();
             doorDefinitions = new List<DoorDefinition>();
 
+            // Rand.PushState(1233);
             // Generate the dungeon rooms  in a data-oriented way using the RoomDefinition struct
-            GenerateRoomDefinitions(new Rectangle(Point.Empty, size));
+            GenerateRoomDefinitionsRecurse(new Rectangle(Point.Empty, size));
             Debug.LogInfo("Printing rooms:");
             roomDefinitions.ForEach(definition => Debug.LogInfo($"\t{definition.ID}: {definition.RoomArea}"));
-            
+
             GenerateDoorDefinitions();
 
             // Convert the generated dungeon room and door definitions to actual Room and Door objects
@@ -37,17 +38,17 @@ namespace application {
         }
 
         #region Generate Room Definitions
-        private void _GenerateRoomDefinitions(Rectangle currentRoomSize) {
+        private void GenerateRoomDefinitionsRecurse(Rectangle currentRoomSize) {
             var direction = Rand.Sign; // -1 = horizontal, 1 = vertical
-            var minRoomSizeA1 = (direction == -1 ? currentRoomSize.X : currentRoomSize.Y) + minimumRoomSize + 1;
-            var minRoomSizeB1 = (direction == -1 ? currentRoomSize.X + currentRoomSize.Width : currentRoomSize.Y + currentRoomSize.Height) - minimumRoomSize - 1;
+            var minRoomSizeA1 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize + 1;
+            var minRoomSizeB1 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize - 1;
             var splitPoint = 0;
             if (minRoomSizeA1 >= minRoomSizeB1) {
                 // means we can't divide in the chosen direction such that rooms would be bigger than minimum area
                 // try to divide in the other direction
                 direction = -direction;
-                var minRoomSizeA2 = (direction == -1 ? currentRoomSize.X : currentRoomSize.Y) + minimumRoomSize + 1;
-                var minRoomSizeB2 = (direction == -1 ? currentRoomSize.X + currentRoomSize.Width : currentRoomSize.Y + currentRoomSize.Height) - minimumRoomSize - 1;
+                var minRoomSizeA2 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize + 1;
+                var minRoomSizeB2 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize - 1;
 
                 if (minRoomSizeA2 >= minRoomSizeB2) {
                     // can't divide at all. Get out of here.
@@ -61,19 +62,76 @@ namespace application {
             }
 
             if (direction == -1) {
-                GenerateRoomDefinitions(new Rectangle(currentRoomSize.X, currentRoomSize.Y, splitPoint + 1, currentRoomSize.Height));
-                GenerateRoomDefinitions(new Rectangle(currentRoomSize.X + splitPoint, currentRoomSize.Y, currentRoomSize.Width - splitPoint, currentRoomSize.Height));
+                GenerateRoomDefinitionsRecurse(new Rectangle(currentRoomSize.X, currentRoomSize.Y, splitPoint + 1 - currentRoomSize.X, currentRoomSize.Height));
+                GenerateRoomDefinitionsRecurse(new Rectangle(splitPoint, currentRoomSize.Y, currentRoomSize.Width - splitPoint + currentRoomSize.X, currentRoomSize.Height));
             } else {
-                GenerateRoomDefinitions(new Rectangle(currentRoomSize.X, currentRoomSize.Y, currentRoomSize.Width, splitPoint + 1));
-                GenerateRoomDefinitions(new Rectangle(currentRoomSize.X, currentRoomSize.Y + splitPoint, currentRoomSize.Width, currentRoomSize.Height - splitPoint));
+                GenerateRoomDefinitionsRecurse(new Rectangle(currentRoomSize.X, currentRoomSize.Y, currentRoomSize.Width, splitPoint + 1 - currentRoomSize.Y));
+                GenerateRoomDefinitionsRecurse(new Rectangle(currentRoomSize.X, splitPoint, currentRoomSize.Width, currentRoomSize.Height - splitPoint + currentRoomSize.Y));
             }
         }
 
+        private void GenerateRoomDefinitionsIter(Rectangle startingSize) {
+            var availableRooms = new List<Rectangle>();
+            var finalRooms = new List<Rectangle>();
+            availableRooms.Add(startingSize);
+            while (true) {
+                var roomsToAdd = new List<Rectangle>();
+                var roomsToDelete = new List<Rectangle>();
+                foreach (var availableRoom in availableRooms) {
+                    var direction = Rand.Sign; // -1 = horizontal, 1 = vertical
+                    var from = (direction == -1 ? availableRoom.Left : availableRoom.Top) + minimumRoomSize;
+                    var to = (direction == -1 ? availableRoom.Right : availableRoom.Bottom) - minimumRoomSize - 1;
+                    if (from < to) {
+                        roomsToDelete.Add(availableRoom);
+                        Debug.Log($"Generating rooms from room: {availableRoom} with min/max splitPoint {from}, {to}");
+
+                        var splitPoint = Rand.RangeInclusive(from, to);
+                        // var splitPoint = (from + to) / 2;
+                        if (direction == -1) {
+                            roomsToAdd.Add(new Rectangle(availableRoom.X, availableRoom.Y, splitPoint + 1 - availableRoom.X, availableRoom.Height));
+                            roomsToAdd.Add(new Rectangle(splitPoint, availableRoom.Y, availableRoom.Width - splitPoint + availableRoom.X, availableRoom.Height));
+                        } else {
+                            roomsToAdd.Add(new Rectangle(availableRoom.X, availableRoom.Y, availableRoom.Width, splitPoint + 1 - availableRoom.Y));
+                            roomsToAdd.Add(new Rectangle(availableRoom.X, splitPoint, availableRoom.Width, availableRoom.Height - splitPoint + availableRoom.Y));
+                        }
+                    } else {
+                        direction = -direction; // -1 = horizontal, 1 = vertical
+                        var from2 = (direction == -1 ? availableRoom.Left : availableRoom.Top) + minimumRoomSize;
+                        var to2 = (direction == -1 ? availableRoom.Right : availableRoom.Bottom) - minimumRoomSize - 1;
+                        if (from2 < to2) {
+                            roomsToDelete.Add(availableRoom);
+                            Debug.Log($"Generating rooms from room: {availableRoom} with min/max splitPoint {from2}, {to2}");
+
+                            var splitPoint = Rand.RangeInclusive(from2, to2);
+                            // var splitPoint = (from2 + to2) / 2;
+                            if (direction == -1) {
+                                roomsToAdd.Add(new Rectangle(availableRoom.X, availableRoom.Y, splitPoint + 1 - availableRoom.X, availableRoom.Height));
+                                roomsToAdd.Add(new Rectangle(splitPoint, availableRoom.Y, availableRoom.Width - splitPoint + availableRoom.X, availableRoom.Height));
+                            } else {
+                                roomsToAdd.Add(new Rectangle(availableRoom.X, availableRoom.Y, availableRoom.Width, splitPoint + 1 - availableRoom.Y));
+                                roomsToAdd.Add(new Rectangle(availableRoom.X, splitPoint, availableRoom.Width, availableRoom.Height - splitPoint + availableRoom.Y));
+                            }
+                        } else {
+                            roomsToDelete.Add(availableRoom);
+                            finalRooms.Add(availableRoom);
+                        }
+                    }
+                }
+
+                if (roomsToAdd.Count == 0) break;
+
+                roomsToDelete.ForEach(room => availableRooms.Remove(room));
+                availableRooms.AddRange(roomsToAdd);
+            }
+
+            roomDefinitions.AddRange(finalRooms.Select(room => new RoomDefinition(room)));
+        }
+
         private void GenerateRoomDefinitions(Rectangle currentRoomSize) {
-            var direction = Rand.Sign; // -1 = horizontal, 1 = vertical
-            var minRoomSizeA1 = (direction == -1 ? currentRoomSize.X : currentRoomSize.Y) + minimumRoomSize + 1;
-            var minRoomSizeB1 = (direction == -1 ? currentRoomSize.X + currentRoomSize.Width : currentRoomSize.Y + currentRoomSize.Height) - minimumRoomSize - 1;
-            if (minRoomSizeA1 >= minRoomSizeB1) {
+            var direction = (sbyte) Rand.Sign; // -1 = horizontal, 1 = vertical
+            var minRoomSizeA1 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize + 1;
+            var minRoomSizeB1 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize - 1;
+            if (minRoomSizeA1 >= minRoomSizeB1 || minRoomSizeA1 <= 0 || minRoomSizeB1 <= 0) {
                 roomDefinitions.Add(new RoomDefinition(currentRoomSize));
             } else {
                 var splitPoint = Rand.RangeInclusive(minRoomSizeA1, minRoomSizeB1);

@@ -28,7 +28,7 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 20; //TODO: experiment with changing this
+        private const int SCALE = 10; //TODO: experiment with changing this
         private const int MIN_ROOM_SIZE = 7; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
