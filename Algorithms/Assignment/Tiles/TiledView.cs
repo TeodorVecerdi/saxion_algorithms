@@ -23,9 +23,9 @@ abstract class TiledView : GameObject
 	private AnimationSprite _tileSet;
 
 	public TiledView(int pColumns, int pRows, int pTileSize, TileType pDefaultTileType) {
-		Debug.Assert(pColumns > 0, "Invalid amount of columns passed in: " + pColumns);
-		Debug.Assert(pRows > 0, "Invalid amount of rows passed in: " + pRows);
-		Debug.Assert(pDefaultTileType != null, "Invalid default tile type passed in:" + pDefaultTileType);
+		application.utils.Debug.Assert(pColumns > 0, "Invalid amount of columns passed in: " + pColumns);
+		application.utils.Debug.Assert(pRows > 0, "Invalid amount of rows passed in: " + pRows);
+		application.utils.Debug.Assert(pDefaultTileType != null, "Invalid default tile type passed in:" + pDefaultTileType);
 
 		columns = pColumns;
 		rows = pRows;
@@ -33,7 +33,7 @@ abstract class TiledView : GameObject
 		_defaultTileType = pDefaultTileType;
 
 		//we use a single sprite to render the whole tileview
-		_tileSet = new AnimationSprite("assets/tileset.png", 3, 1);
+		_tileSet = new AnimationSprite("data/tileset.png", 3, 1);
 		_tileSet.width = _tileSet.height = pTileSize;
 
 		initializeTiles();
@@ -58,17 +58,17 @@ abstract class TiledView : GameObject
 	public void SetTileType(int pColumn, int pRow, TileType pTileType)
 	{
 		//an example of hardcore defensive coding;)
-		Debug.Assert(pColumn >= 0 && pColumn < columns, "Invalid column passed in: " + pColumn);
-		Debug.Assert(pRow >= 0 && pRow < rows, "Invalid row passed in:" + pRow);
-		Debug.Assert(pTileType != null, "Invalid tile type passed in:" + pTileType);
+		application.utils.Debug.Assert(pColumn >= 0 && pColumn < columns, "Invalid column passed in: " + pColumn);
+		application.utils.Debug.Assert(pRow >= 0 && pRow < rows, "Invalid row passed in:" + pRow);
+		application.utils.Debug.Assert(pTileType != null, "Invalid tile type passed in:" + pTileType);
 
 		_tileData[pColumn, pRow] = pTileType;
 	}
 
 	public TileType GetTileType(int pColumn, int pRow)
 	{
-		Debug.Assert(pColumn >= 0 && pColumn < columns, "Invalid column passed in: " + pColumn);
-		Debug.Assert(pRow >= 0 && pRow < rows, "Invalid row passed in:" + pRow);
+		application.utils.Debug.Assert(pColumn >= 0 && pColumn < columns, "Invalid column passed in: " + pColumn);
+		application.utils.Debug.Assert(pRow >= 0 && pRow < rows, "Invalid row passed in:" + pRow);
 
 		return _tileData[pColumn, pRow];
 	}

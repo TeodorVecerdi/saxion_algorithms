@@ -22,16 +22,17 @@ namespace application.utils {
                 if (!Directory.Exists("logs")) {
                     Directory.CreateDirectory("logs");
                 }
-                var timeNow = $"{DateTime.UtcNow:dd-MM-yyyy-hh-mm-ss_zz}";
+
+                var timeNow = $"{DateTime.UtcNow:dd-MM-yyyy-hh-mm-ss_zz}".Replace("_", "_GMT");
                 loggerFileStream = new FileStream($"logs/log_{timeNow}.txt", FileMode.Create, FileAccess.Write);
                 logger = new StreamWriter(loggerFileStream, Encoding.UTF8, 128) {AutoFlush = true};
-                var sysInf = $@"
-Logging started at {timeNow}
+                var sysInf = $@"Logging started at {timeNow}
 
 {new string('=', 23)}System Information{new string('=', 23)}
 {SystemInformation()}
 {new string('=', 64)}
-{new string('=', 24)}Application Logs{new string('=', 24)}\n";
+{new string('=', 24)}Application Logs{new string('=', 24)}
+";
                 logger.WriteLine(sysInf);
             } else {
                 if (logger != null) {
@@ -154,7 +155,8 @@ Logging started at {timeNow}
             var stack = new StackFrame(1, true);
             var mth = stack.GetMethod();
             var fname = stack.GetFileName();
-            var lineNumber = stack.GetFileLineNumber();
+            // var lineNumber = stack.GetFileLineNumber();
+            var lineNumber = new StackTrace(1, true).GetFrame(0).GetFileLineNumber();
             var fileName = fname?.Substring(fname.LastIndexOf("\\", StringComparison.InvariantCulture) + 1);
             var className = mth.ReflectedType?.Name;
             var method = new StringBuilder();

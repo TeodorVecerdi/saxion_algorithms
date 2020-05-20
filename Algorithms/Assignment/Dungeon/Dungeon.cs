@@ -14,8 +14,8 @@ using System.Drawing;
  * TODO:
  * - Read carefully through all the code below, so that you know which helper methods are available to you.
  * - Create a subclass of this class and override the generate method (see the SampleDungeon for an example).
- */ 
-abstract class Dungeon : Canvas
+ */
+public abstract class Dungeon : Canvas
 {
 	//the (unscaled) dimensions of the dungeon (basically how 'tiles' wide and high)
 	public readonly Size size;

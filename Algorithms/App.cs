@@ -5,7 +5,6 @@ namespace application {
     public class App {
         public static void Main(string[] args) {
             try {
-                Debug.EnableFileLogger(true);
                 var dcg = new AlgorithmsAssignment();
                 dcg.Start();
             } catch (Exception e) {

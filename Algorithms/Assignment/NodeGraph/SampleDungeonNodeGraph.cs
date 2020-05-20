@@ -19,7 +19,7 @@ using System.Drawing;
 
 	public SampleDungeonNodeGraph(Dungeon pDungeon) : base((int)(pDungeon.size.Width * pDungeon.scale), (int)(pDungeon.size.Height * pDungeon.scale), (int)pDungeon.scale/3)
 	{
-		Debug.Assert(pDungeon != null, "Please pass in a dungeon.");
+		application.utils.Debug.Assert(pDungeon != null, "Please pass in a dungeon.");
 
 		_dungeon = pDungeon;
 	}
