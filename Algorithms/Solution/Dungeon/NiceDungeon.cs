@@ -11,6 +11,7 @@ namespace application {
         private int minimumRoomSize;
         private List<RoomDefinition> roomDefinitions;
         private List<DoorDefinition> doorDefinitions;
+        private Dictionary<int, int> doorCounts;
 
         private readonly EasyDraw debug;
         private readonly int scale;
@@ -27,21 +28,27 @@ namespace application {
             this.minimumRoomSize = minimumRoomSize;
             roomDefinitions = new List<RoomDefinition>();
             doorDefinitions = new List<DoorDefinition>();
+            doorCounts = new Dictionary<int, int>();
 
             Rand.PushState(1233);
 
             // Generate the dungeon rooms in a data-oriented way using the RoomDefinition struct
             GenerateRoomDefinitionsRecurse(new Rectangle(Point.Empty, size));
-            Debug.LogInfo("Printing rooms:");
-            roomDefinitions.ForEach(definition => Debug.LogInfo($"\t{definition.ID}: {definition.RoomArea}"));
+            // Debug.LogInfo("Printing rooms:");
+            // roomDefinitions.ForEach(definition => Debug.LogInfo($"\t{definition.ID}: {definition.RoomArea}"));
+            
+            if (dungeonType >= DungeonType.Good)
+                CleanRooms(); // Remove rooms which have the area the same as maximum and minimum area
 
+            // Link the rooms with doors
             GenerateDoorDefinitions();
-
+            
+            if (dungeonType >= DungeonType.Good)
+                CalculateDoorCount();
+            
             // Convert the generated dungeon room and door definitions to actual Room and Door objects
             ConvertDefinitionsToDungeon();
 
-            if (dungeonType >= DungeonType.Good)
-                CleanRooms(); // Removing rooms which have the area the same as maximum and minimum area
             if (dungeonType == DungeonType.Excellent)
                 ShrinkRooms(); // Make rooms smaller in size by some amount
 
@@ -49,11 +56,11 @@ namespace application {
         }
 
         #region Generate Room Definitions
-        private const bool randomDirection = false;
+        private const bool randomSplitDirection = false;
 
         private void GenerateRoomDefinitionsRecurse(Rectangle currentRoomSize) {
             int direction; // -1 = horizontal, 1 = vertical
-            if (randomDirection) direction = Rand.Sign;
+            if (randomSplitDirection) direction = Rand.Sign;
             else {
                 // Calculate direction based on width/height of currentRoomSize.
                 // Prefer splitting vertically if it's wider than taller or horizontally otherwise
@@ -182,7 +189,7 @@ namespace application {
             var adjacentRooms = new List<(RoomDefinition room, Direction direction, RoomAdjacencyType adjacencyType)>();
             foreach (var possibleRoom in roomDefinitions) {
                 if (possibleRoom.ID == room.ID) continue;
-                var (direction, adjacencyType) = CheckAdjacent(room.RoomArea, possibleRoom.RoomArea);
+                var (direction, adjacencyType) = CheckAdjacent(room.Area, possibleRoom.Area);
                 if (adjacencyType == RoomAdjacencyType.NonAdjacent) continue;
                 adjacentRooms.Add((possibleRoom, direction, adjacencyType));
             }
@@ -210,48 +217,68 @@ namespace application {
 
         private DoorDefinition CreateDoor(RoomDefinition roomA, RoomDefinition roomB, Direction direction, RoomAdjacencyType adjacencyType) {
             if (direction == Direction.Horizontal) {
-                var minHeight = Mathf.Max(roomA.RoomArea.Top, roomB.RoomArea.Top);
-                var maxHeight = Mathf.Min(roomA.RoomArea.Bottom, roomB.RoomArea.Bottom);
+                var minHeight = Mathf.Max(roomA.Area.Top, roomB.Area.Top);
+                var maxHeight = Mathf.Min(roomA.Area.Bottom, roomB.Area.Bottom);
                 if (minHeight > maxHeight) return new DoorDefinition(Point.Empty, Direction.Horizontal, -1, -1, -1);
                 var doorY = Rand.RangeInclusive(minHeight + 1, maxHeight - 1);
                 // var doorY = (minHeight + maxHeight) / 2;
                 
                 if (adjacencyType == RoomAdjacencyType.AtoB) {
                     // the door should be on the right edge of roomA / left edge of roomB 
-                    var doorX = roomA.RoomArea.Right;
+                    var doorX = roomA.Area.Right;
                     return new DoorDefinition(new Point(doorX, doorY), direction, roomA.ID, roomB.ID);
                 } else {
                     // the door should be on the left edge of roomA / right edge of roomB
-                    var doorX = roomA.RoomArea.Left - 1;
+                    var doorX = roomA.Area.Left - 1;
                     return new DoorDefinition(new Point(doorX + 1, doorY), direction, roomA.ID, roomB.ID);
                 }
             } else {
-                var minWidth = Mathf.Max(roomA.RoomArea.Left, roomB.RoomArea.Left);
-                var maxWidth = Mathf.Min(roomA.RoomArea.Right, roomB.RoomArea.Right);
+                var minWidth = Mathf.Max(roomA.Area.Left, roomB.Area.Left);
+                var maxWidth = Mathf.Min(roomA.Area.Right, roomB.Area.Right);
                 if (minWidth > maxWidth) return new DoorDefinition(Point.Empty, Direction.Horizontal, -1, -1, -1);
                 var doorX = Rand.RangeInclusive(minWidth + 1, maxWidth - 1);
                 // var doorX = (minWidth + maxWidth) / 2;
                 
                 if (adjacencyType == RoomAdjacencyType.AtoB) {
                     // the door should be on the bottom edge of roomA / top edge of roomB 
-                    var doorY = roomA.RoomArea.Bottom;
+                    var doorY = roomA.Area.Bottom;
                     return new DoorDefinition(new Point(doorX, doorY), direction, roomA.ID, roomB.ID);
                 } else {
                     // the door should be on the top edge of roomA / bottom edge of roomB
-                    var doorY = roomA.RoomArea.Top;
+                    var doorY = roomA.Area.Top;
                     return new DoorDefinition(new Point(doorX, doorY), direction, roomA.ID, roomB.ID);
                 }
             }
         }
         #endregion
 
+        private void CalculateDoorCount() {
+            doorCounts.Clear();
+            roomDefinitions.ForEach(room => doorCounts.Add(room.ID, 0));
+            doorDefinitions.ForEach(door => {
+                doorCounts[door.RoomAID]++;
+                doorCounts[door.RoomBID]++;
+            });
+        }
+        
         private void ConvertDefinitionsToDungeon() {
-            rooms.AddRange(roomDefinitions.Select(roomDef => new Room(roomDef.RoomArea, roomDef.ID)));
+            rooms.AddRange(roomDefinitions.Select(roomDef => new Room(roomDef.Area, roomDef.ID)));
             doors.AddRange(doorDefinitions.Select(doorDef => new Door(doorDef.DoorPosition, doorDef.Direction == Direction.Horizontal, doorDef.ID, doorDef.RoomAID, doorDef.RoomBID)));
         }
 
         private void CleanRooms() {
-            Debug.LogWarning("CleanRooms not implemented!");
+            var maxArea = -1;
+            var minArea = size.Width * size.Height; // can't get bigger than the whole dungeon
+            foreach (var room in roomDefinitions) {
+                var area = room.Area.Area;
+                if (area < minArea) minArea = area;
+                if (area > maxArea) maxArea = area;
+            }
+
+            roomDefinitions.RemoveAll(room => {
+                var area = room.Area.Area;
+                return area == minArea || area == maxArea;
+            });
         }
 
         private void ShrinkRooms() {
@@ -276,16 +303,21 @@ namespace application {
             });
         }
 
-        protected override void draw() {
+        protected override void drawRoom(Room pRoom, Pen pWallColor, Brush pFillColor = null) {
             if (dungeonType >= DungeonType.Good) {
-                Debug.LogWarning("Custom Drawing for DungeonType >= Good not implemented!");
-
-                // TODO: custom drawing from Assignment 1.2 (different colours depending on number of doors)
-                base.draw();
-                return;
+                var doorCount = doorCounts[pRoom.id];
+                
+                Brush fillColor;
+                if (doorCount == 0) fillColor = Brushes.Red;
+                else if (doorCount == 1) fillColor = Brushes.DarkOrange;
+                else if (doorCount == 2) fillColor = Brushes.Yellow;
+                else fillColor = Brushes.GreenYellow;
+                
+                graphics.FillRectangle(fillColor, pRoom.area.Left, pRoom.area.Top, pRoom.area.Width - 0.5f, pRoom.area.Height - 0.5f);
+                graphics.DrawRectangle(pWallColor, pRoom.area.Left, pRoom.area.Top, pRoom.area.Width - 0.5f, pRoom.area.Height - 0.5f);
             }
 
-            base.draw();
+            base.drawRoom(pRoom, pWallColor, pFillColor);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace application {
             //TODO: Comment out SampleDungeon below, implement a SufficientDungeon class and uncomment it below
 
             // _dungeon = new SampleDungeon(size);
-            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Sufficient);
+            // _dungeon = new NiceDungeon(size, SCALE, DungeonType.Sufficient);
 
             // _dungeon = new SufficientDungeon(size);
 
@@ -96,6 +96,7 @@ namespace application {
             //TODO: Comment out GoodDungeon above, implement an ExcellentDungeon class, and uncomment it below
 
             //_dungeon = new ExcellentDungeon(size);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent);
 
             if (_dungeon != null) {
                 //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:

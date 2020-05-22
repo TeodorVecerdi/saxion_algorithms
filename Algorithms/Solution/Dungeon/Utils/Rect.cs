@@ -26,6 +26,7 @@ namespace application {
         public int Top => Y;
         public int Right => X + Width - 1;
         public int Bottom => Y + Height - 1;
+        public int Area => Width * Height;
 
         public void Shrink(Size size) {
             Shrink(size.Width, size.Height);
