@@ -28,7 +28,7 @@ class SampleDungeon : Dungeon
 		rooms.Add(new Room(new Rectangle(size.Width/2, 0, size.Width/2, size.Height)));
 		//and a door in the middle wall with a random y position
 		//TODO:experiment with changing the location and the Pens.White below
-		doors.Add(new Door(new Point(size.Width / 2, size.Height / 2 + Utils.Random(-5, 5))));
+		doors.Add(new Door(new Point(size.Width / 2, size.Height / 2 + Utils.Random(-5, 5)), true, -1, -1, -1));
 	}
 }
 

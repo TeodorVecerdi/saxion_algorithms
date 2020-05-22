@@ -28,8 +28,8 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 10; //TODO: experiment with changing this
-        private const int MIN_ROOM_SIZE = 7; //TODO: use this setting in your dungeon generator
+        private const int SCALE = 24; //TODO: experiment with changing this
+        private const int MIN_ROOM_SIZE = 5; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
@@ -76,7 +76,7 @@ namespace application {
             //TODO: Comment out SampleDungeon below, implement a SufficientDungeon class and uncomment it below
 
             // _dungeon = new SampleDungeon(size);
-            _dungeon = new NiceDungeon(size, DungeonType.Excellent);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Sufficient);
 
             // _dungeon = new SufficientDungeon(size);
 
@@ -87,6 +87,7 @@ namespace application {
             //TODO: Comment out SufficientDungeon above, implement a GoodDungeon class, and uncomment it below
 
             //_dungeon = new GoodDungeon(size);
+            // _dungeon = new NiceDungeon(size, SCALE, DungeonType.Good);
 
             //////////////////////////////////////
             //Assignment 1.3 Excellent (optional)

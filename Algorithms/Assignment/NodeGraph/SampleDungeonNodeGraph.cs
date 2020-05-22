@@ -59,7 +59,7 @@ using System.Drawing;
 	 */
 	protected Point getDoorCenter(Door pDoor)
 	{
-		return getPointCenter(pDoor.location);
+		return getPointCenter(pDoor.Location);
 	}
 
 	/**

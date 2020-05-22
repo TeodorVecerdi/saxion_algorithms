@@ -6,14 +6,15 @@ using System.Drawing;
  */
 public class Room {
     public Rectangle area;
-    public string id;
+    public int id;
+    private static int ids = 0;
 
-    public Room(Rectangle pArea, string pId) {
+    public Room(Rectangle pArea, int pId) {
         area = pArea;
         id = pId;
     }
     
-    public Room(Rectangle pArea) : this(pArea, Guid.NewGuid().ToString()){}
+    public Room(Rectangle pArea) : this(pArea, ids++){}
 
     public override string ToString() {
         return $"Room(ID={id}) {area.ToString()}";

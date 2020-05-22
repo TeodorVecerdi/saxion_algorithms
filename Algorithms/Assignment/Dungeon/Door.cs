@@ -5,36 +5,24 @@
  * Changes to this class might be required based on your specific implementation of the algorithm.
  */
 public class Door {
-    public readonly Point location;
-
-    //Keeping tracks of the Rooms that this door connects to,
-    //might make your life easier during some of the assignments
-    public Room roomA = null;
-    public Room roomB = null;
-
-    public string doorID;
+    public readonly Point Location;
+    public readonly int ID;
+    public readonly int RoomAid;
+    public readonly int RoomBid;
 
     //You can also keep track of additional information such as whether the door connects horizontally/vertically
     //Again, whether you need flags like this depends on how you implement the algorithm, maybe you need other flags
-    public bool horizontal = false;
+    public readonly bool Horizontal;
 
-    public Door(Point pLocation, Room roomA = null, Room roomB = null) {
-        location = pLocation;
-        this.roomA = roomA;
-        this.roomB = roomB;
-    }
-
-    public Door(Point pLocation, bool pDirection, string pDoorID) {
-        location = pLocation;
-        horizontal = pDirection;
-        doorID = pDoorID;
+    public Door(Point pLocation, bool pDirection, int pID, int roomAid, int roomBid) {
+        Location = pLocation;
+        Horizontal = pDirection;
+        ID = pID;
+        RoomAid = roomAid;
+        RoomBid = roomBid;
     }
 
     public override string ToString() {
-        return $"Door(Location:{location}, RoomA:{roomA?.ToString()}, RoomB:{roomB?.ToString()})";
+        return $"Door(Location:{Location})";
     }
-
-    //TODO: Implement a toString method for debugging
-    //Return information about the type of object and it's data
-    //eg Door: (x,y)
 }
