@@ -64,10 +64,12 @@
         <Compile Include="Assignment\Tiles\TileType.cs" />
         <Compile Include="Globals.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Solution\Dungeon\Hallway.cs" />
         <Compile Include="Solution\Dungeon\NiceDungeon.cs" />
         <Compile Include="Solution\Dungeon\Utils\Direction.cs" />
         <Compile Include="Solution\Dungeon\Utils\DoorDefinition.cs" />
         <Compile Include="Solution\Dungeon\Utils\DungeonType.cs" />
+        <Compile Include="Solution\Dungeon\Utils\HallwayDefinition.cs" />
         <Compile Include="Solution\Dungeon\Utils\Rect.cs" />
         <Compile Include="Solution\Dungeon\Utils\RoomAdjacencyType.cs" />
         <Compile Include="Solution\Dungeon\Utils\RoomDefinition.cs" />

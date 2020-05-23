@@ -33,17 +33,17 @@ namespace application {
         }
 
         public void Shrink(int width, int height) {
-            X += width;
-            Y += height;
-            Width -= 2 * width;
-            Height -= 2 * height;
+            // X += width;
+            // Y += height;
+            Width -= width;
+            Height -= height;
         }
 
-        public Rect Shrinked(Size size) {
-            return Shrinked(size.Width, size.Height);
+        public Rect ShrinkedCenter(Size size) {
+            return ShrinkedCenter(size.Width, size.Height);
         }
 
-        public Rect Shrinked(int width, int height) {
+        public Rect ShrinkedCenter(int width, int height) {
             return new Rect(X + width, Y + height, Width - 2 * width, Height - 2 * height);
         }
 

@@ -48,8 +48,8 @@ using System.Drawing;
 	 */
 	protected Point getRoomCenter(Room pRoom)
 	{
-		float centerX = ((pRoom.area.Left + pRoom.area.Right) / 2.0f) * _dungeon.scale;
-		float centerY = ((pRoom.area.Top + pRoom.area.Bottom) / 2.0f) * _dungeon.scale;
+		float centerX = ((pRoom.Area.Left + pRoom.Area.Right) / 2.0f) * _dungeon.scale;
+		float centerY = ((pRoom.Area.Top + pRoom.Area.Bottom) / 2.0f) * _dungeon.scale;
 		return new Point((int)centerX, (int)centerY);
 	}
 

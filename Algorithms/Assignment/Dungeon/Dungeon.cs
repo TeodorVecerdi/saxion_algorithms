@@ -113,8 +113,8 @@ public abstract class Dungeon : Canvas
 		//the -0.5 has two reasons:
 		//- Doing it this way actually makes sure that an area of 0,0,4,4 (x,y,width,height) is draw as an area of 0,0,4,4
 		//- Doing it this way makes sure that an area of 0,0,1,1 is ALSO drawn (which it wouldn't if you used -1 instead 0.5f)
-		if (pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.area.Left, pRoom.area.Top, pRoom.area.Width - 0.5f, pRoom.area.Height - 0.5f);
-		graphics.DrawRectangle(pWallColor, pRoom.area.Left, pRoom.area.Top, pRoom.area.Width - 0.5f, pRoom.area.Height - 0.5f);
+		if (pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
+		graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
 	}
 
 	protected virtual void drawDoors(IEnumerable<Door> pDoors, Pen pColor)
