@@ -9,18 +9,18 @@ class SampleNodeGraphAgent : NodeGraphAgent
 	//Current target to move towards
 	private Node _target = null;
 
-	public SampleNodeGraphAgent(NodeGraph pNodeGraph) : base(pNodeGraph)
+	public SampleNodeGraphAgent(NodeGraph nodeGraph) : base(nodeGraph)
 	{
 		SetOrigin(width / 2, height / 2);
 
 		//position ourselves on a random node
-		if (pNodeGraph.nodes.Count > 0)
+		if (nodeGraph.nodes.Count > 0)
 		{
-			jumpToNode(pNodeGraph.nodes[Utils.Random(0, pNodeGraph.nodes.Count)]);
+			jumpToNode(nodeGraph.nodes[Utils.Random(0, nodeGraph.nodes.Count)]);
 		}
 
 		//listen to nodeclicks
-		pNodeGraph.OnNodeLeftClicked += onNodeClickHandler;
+		nodeGraph.OnNodeLeftClicked += onNodeClickHandler;
 	}
 
 	protected virtual void onNodeClickHandler(Node pNode)

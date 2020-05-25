@@ -8,7 +8,7 @@ using ID = System.Int32;
 namespace application {
     public class NiceDungeon : Dungeon {
         public readonly List<Hallway> hallways = new List<Hallway>();
-        
+
         private readonly DungeonType dungeonType;
         private int minimumRoomSize;
 
@@ -16,11 +16,16 @@ namespace application {
         private Dictionary<ID, RoomDefinition> roomDefinitions;
         private Dictionary<ID, DoorDefinition> doorDefinitions;
         private Dictionary<ID, HallwayDefinition> hallwayDefinitions;
+
         private Dictionary<ID, int> doorCounts;
         private Dictionary<ID, List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>> roomAdjacencyLists;
 
         private readonly EasyDraw debug;
         private readonly int canvasScale;
+
+        public (Dictionary<ID, RoomDefinition> Rooms, Dictionary<ID, DoorDefinition> Doors, Dictionary<ID, HallwayDefinition> Hallways)
+            DungeonData =>
+            (roomDefinitions, doorDefinitions, hallwayDefinitions);
 
         public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType) : base(pSize) {
             this.canvasScale = canvasScale;
@@ -43,25 +48,26 @@ namespace application {
 
             // Generate the dungeon rooms
             GenerateRooms_Recurse(new Rectangle(Point.Empty, size));
+
             // GenerateRooms_Iter(new Rectangle(Point.Empty, size));
 
             // Remove rooms which have the area the same as maximum and minimum area
             if (dungeonType >= DungeonType.Good)
-                CleanRooms(); 
+                CleanRooms();
 
             GenerateRoomAdjacencyLists();
 
             // Link the rooms with doors
-            // GenerateDoors_Full(); // connect all rooms to all adjacent rooms
-            GenerateDoors_Min(); // only the minimum required amount of doors (n-1?)
+            GenerateDoors_Full(); // connect all rooms to all adjacent rooms
 
+            // GenerateDoors_Min(); // only the minimum required amount of doors (n-1?)
 
             if (dungeonType == DungeonType.Excellent) {
                 ShrinkRooms(); // Make rooms smaller in size by some amount
                 CleanDoors();
                 ConvertDoorsToHallways();
             }
-            
+
             if (dungeonType >= DungeonType.Good)
                 CalculateDoorCount();
 
@@ -312,7 +318,7 @@ namespace application {
 
         private void CreateDungeon() {
             rooms.AddRange(roomDefinitions.Values.Select(roomDef => new Room(roomDef.Area, roomDef.ID)));
-            doors.AddRange(doorDefinitions.Values.Select(doorDef => new Door(doorDef.DoorPosition, doorDef.Direction == Direction.Horizontal, doorDef.ID, doorDef.RoomAID, doorDef.RoomBID)));
+            doors.AddRange(doorDefinitions.Values.Select(doorDef => new Door(doorDef.Position, doorDef.Direction == Direction.Horizontal, doorDef.ID, doorDef.RoomAID, doorDef.RoomBID)));
             hallways.AddRange(hallwayDefinitions.Values.Select(hallwayDef => new Hallway(hallwayDef)));
         }
 
@@ -366,27 +372,26 @@ namespace application {
                     var minY = Mathf.Max(roomDefinitions[door.RoomAID].Area.Top + 1, roomDefinitions[door.RoomBID].Area.Top + 1);
                     var maxY = Mathf.Min(roomDefinitions[door.RoomAID].Area.Bottom - 1, roomDefinitions[door.RoomBID].Area.Bottom - 1);
                     if (minY > maxY) doorDefinitions.Remove(doorID); // can't connect rooms
-                    else if (door.DoorPosition.Y < minY) {
+                    else if (door.Position.Y < minY) {
                         // can still connect but door is placed in the wrong place
-                        door.DoorPosition.Y = minY;
+                        door.Position.Y = minY;
                         doorDefinitions[doorID] = door;
-                    }
-                    else if (door.DoorPosition.Y > maxY) {
+                    } else if (door.Position.Y > maxY) {
                         // can still connect but door is placed in the wrong place
-                        door.DoorPosition.Y = maxY;
+                        door.Position.Y = maxY;
                         doorDefinitions[doorID] = door;
                     }
                 } else {
                     var minX = Mathf.Max(roomDefinitions[door.RoomAID].Area.Left + 1, roomDefinitions[door.RoomBID].Area.Left + 1);
                     var maxX = Mathf.Min(roomDefinitions[door.RoomAID].Area.Right - 1, roomDefinitions[door.RoomBID].Area.Right - 1);
                     if (minX > maxX) doorDefinitions.Remove(doorID); // can't connect rooms
-                    else if (door.DoorPosition.X < minX) {
+                    else if (door.Position.X < minX) {
                         // can still connect but door is placed in the wrong place
-                        door.DoorPosition.X = minX;
+                        door.Position.X = minX;
                         doorDefinitions[doorID] = door;
-                    } else if (door.DoorPosition.X > maxX) {
+                    } else if (door.Position.X > maxX) {
                         // can still connect but door is placed in the wrong place
-                        door.DoorPosition.X = maxX;
+                        door.Position.X = maxX;
                         doorDefinitions[doorID] = door;
                     }
                 }
@@ -397,29 +402,28 @@ namespace application {
         /// Checks if the doors need to be converted into hallways, and if so converts them.
         /// </summary>
         private void ConvertDoorsToHallways() {
-            foreach(var doorID in doorDefinitions.Keys.ToList()) {
+            foreach (var doorID in doorDefinitions.Keys.ToList()) {
                 var door = doorDefinitions[doorID];
-                if(door.Direction==Direction.Horizontal) {
+                if (door.Direction == Direction.Horizontal) {
                     var hallwayStartX = roomDefinitions[door.RoomAID].Area.Right;
                     var hallwayEndX = roomDefinitions[door.RoomBID].Area.Left;
                     if (hallwayStartX == hallwayEndX)
                         continue;
-                    
+
                     doorDefinitions.Remove(doorID);
-                    var hallway = new HallwayDefinition(new Point(hallwayStartX, door.DoorPosition.Y), new Point(hallwayEndX, door.DoorPosition.Y), door.Direction, door.RoomAID, door.RoomBID);
+                    var hallway = new HallwayDefinition(new Point(hallwayStartX, door.Position.Y), new Point(hallwayEndX, door.Position.Y), door.Direction, door.RoomAID, door.RoomBID);
                     hallwayDefinitions.Add(hallway.ID, hallway);
                 } else {
                     var hallwayStartY = roomDefinitions[door.RoomAID].Area.Bottom;
                     var hallwayEndY = roomDefinitions[door.RoomBID].Area.Top;
                     if (hallwayStartY == hallwayEndY)
                         continue;
-                    
+
                     doorDefinitions.Remove(doorID);
-                    var hallway = new HallwayDefinition(new Point(door.DoorPosition.X, hallwayStartY), new Point(door.DoorPosition.X, hallwayEndY), door.Direction, door.RoomAID, door.RoomBID);
+                    var hallway = new HallwayDefinition(new Point(door.Position.X, hallwayStartY), new Point(door.Position.X, hallwayEndY), door.Direction, door.RoomAID, door.RoomBID);
                     hallwayDefinitions.Add(hallway.ID, hallway);
                 }
             }
-
         }
         #endregion
 
@@ -432,19 +436,19 @@ namespace application {
                 debug.Fill(Color.White);
                 debug.Text($"{door.RoomAID}->{door.RoomBID}\n{(door.Horizontal ? "Horizontal" : "Vertical")}", door.Location.X * canvasScale, (door.Location.Y + 1) * canvasScale);
             });
-            
+
             hallways.ForEach(hallway => {
                 debug.TextSize(7);
                 debug.Fill(Color.Black);
                 debug.Text($"S", hallway.Start.X * canvasScale + 1, (hallway.Start.Y + 1) * canvasScale + 1);
                 debug.Fill(Color.White);
                 debug.Text($"S", hallway.Start.X * canvasScale, (hallway.Start.Y + 1) * canvasScale);
-                
+
                 debug.TextSize(8);
                 debug.Fill(Color.Black);
-                debug.Text($"{hallway.RoomAID}->{hallway.RoomBID}\n{(hallway.Horizontal ? "Horizontal" : "Vertical")}", (hallway.Start.X + hallway.End.X)/2 * canvasScale + 1, ((hallway.Start.Y + hallway.End.Y)/2 + 1) * canvasScale + 1);
+                debug.Text($"{hallway.RoomAID}->{hallway.RoomBID}\n{(hallway.Horizontal ? "Horizontal" : "Vertical")}", (hallway.Start.X + hallway.End.X) / 2 * canvasScale + 1, ((hallway.Start.Y + hallway.End.Y) / 2 + 1) * canvasScale + 1);
                 debug.Fill(Color.White);
-                debug.Text($"{hallway.RoomAID}->{hallway.RoomBID}\n{(hallway.Horizontal ? "Horizontal" : "Vertical")}", (hallway.Start.X + hallway.End.X)/2 * canvasScale, ((hallway.Start.Y + hallway.End.Y)/2 + 1) * canvasScale);
+                debug.Text($"{hallway.RoomAID}->{hallway.RoomBID}\n{(hallway.Horizontal ? "Horizontal" : "Vertical")}", (hallway.Start.X + hallway.End.X) / 2 * canvasScale, ((hallway.Start.Y + hallway.End.Y) / 2 + 1) * canvasScale);
 
                 debug.TextSize(7);
                 debug.Fill(Color.Black);
@@ -463,7 +467,7 @@ namespace application {
 
         protected override void draw() {
             graphics.Clear(Color.Black);
-            drawRooms(rooms, Pens.Black);    
+            drawRooms(rooms, Pens.Black);
             drawDoors(doors, Pens.Red);
             DrawHallways(hallways, Pens.Crimson, Pens.Orange);
         }
@@ -480,9 +484,9 @@ namespace application {
 
                 graphics.FillRectangle(fillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
                 graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
+            } else {
+                base.drawRoom(pRoom, pWallColor, pFillColor);
             }
-
-            base.drawRoom(pRoom, pWallColor, pFillColor);
         }
 
         private void DrawHallways(IEnumerable<Hallway> hallways, Pen hallwayEntryColor, Pen hallwayColor) {
