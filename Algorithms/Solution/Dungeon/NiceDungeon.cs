@@ -8,7 +8,9 @@ using ID = System.Int32;
 namespace application {
     public class NiceDungeon : Dungeon {
         public readonly List<Hallway> hallways = new List<Hallway>();
-
+        
+        private readonly int canvasScale;
+        private readonly EasyDraw debug;
         private readonly DungeonType dungeonType;
         private int minimumRoomSize;
 
@@ -16,23 +18,21 @@ namespace application {
         private Dictionary<ID, RoomDefinition> roomDefinitions;
         private Dictionary<ID, DoorDefinition> doorDefinitions;
         private Dictionary<ID, HallwayDefinition> hallwayDefinitions;
-
         private Dictionary<ID, int> doorCounts;
         private Dictionary<ID, List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>> roomAdjacencyLists;
 
-        private readonly EasyDraw debug;
-        private readonly int canvasScale;
 
         public (Dictionary<ID, RoomDefinition> Rooms, Dictionary<ID, DoorDefinition> Doors, Dictionary<ID, HallwayDefinition> Hallways)
-            DungeonData =>
-            (roomDefinitions, doorDefinitions, hallwayDefinitions);
+            DungeonData => (roomDefinitions, doorDefinitions, hallwayDefinitions);
 
-        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType) : base(pSize) {
+        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType, int randomSeed = 1233) : base(pSize) {
             this.canvasScale = canvasScale;
             this.dungeonType = dungeonType;
             debug = new EasyDraw(pSize.Width * canvasScale, pSize.Height * canvasScale);
             debug.scale = 1f / canvasScale;
             AddChild(debug);
+            
+            Rand.PushState(randomSeed);
         }
 
         protected override void generate(int minimumRoomSize) {
@@ -44,11 +44,8 @@ namespace application {
             doorCounts = new Dictionary<ID, int>();
             roomAdjacencyLists = new Dictionary<ID, List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>>();
 
-            Rand.PushState(1233); // test seed
-
             // Generate the dungeon rooms
             GenerateRooms_Recurse(new Rectangle(Point.Empty, size));
-
             // GenerateRooms_Iter(new Rectangle(Point.Empty, size));
 
             // Remove rooms which have the area the same as maximum and minimum area
@@ -59,8 +56,7 @@ namespace application {
 
             // Link the rooms with doors
             GenerateDoors_Full(); // connect all rooms to all adjacent rooms
-
-            // GenerateDoors_Min(); // only the minimum required amount of doors (n-1?)
+            // GenerateDoors_Min(); // only the minimum required amount of doors
 
             if (dungeonType == DungeonType.Excellent) {
                 ShrinkRooms(); // Make rooms smaller in size by some amount
@@ -69,10 +65,12 @@ namespace application {
             }
 
             if (dungeonType >= DungeonType.Good)
-                CalculateDoorCount();
+                CalculateDoorCount(); // this is used for the custom drawing (Paint all rooms with 0 doors red, 1 door orange, 2 doors yellow, 3+ doors green)
 
             // Convert the generated dungeon room, door and hallway definitions to actual Room, Door and Hallway objects
             CreateDungeon();
+            
+            // Show debug information such as room id, door id, door from->to room ids   
             DrawDebug();
         }
 
@@ -89,26 +87,26 @@ namespace application {
                 direction = currentRoomSize.Width > currentRoomSize.Height ? 1 : -1;
             }
 
-            var minRoomSizeA1 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize + 1;
-            var minRoomSizeB1 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize - 1;
+            var splitMin1 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize; // + 1 if inner size <= minimum
+            var splitMax1 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize; // - 1 if inner size <= minimum
             var splitPoint = 0;
-            if (minRoomSizeA1 >= minRoomSizeB1) {
+            if (splitMin1 >= splitMax1) {
                 // means we can't divide in the chosen direction such that rooms would be bigger than minimum area
                 // try to divide in the other direction
                 direction = -direction;
-                var minRoomSizeA2 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize + 1;
-                var minRoomSizeB2 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize - 1;
+                var splitMin2 = (direction == -1 ? currentRoomSize.Left : currentRoomSize.Top) + minimumRoomSize; // + 1 if inner size <= minimum
+                var splitMax2 = (direction == -1 ? currentRoomSize.Right : currentRoomSize.Bottom) - minimumRoomSize; // - 1 if inner size <= minimum
 
-                if (minRoomSizeA2 >= minRoomSizeB2) {
+                if (splitMin2 >= splitMax2) {
                     // can't divide at all. Get out of here.
                     var roomDef = new RoomDefinition(currentRoomSize);
                     roomDefinitions.Add(roomDef.ID, roomDef);
                     return;
                 } else {
-                    splitPoint = Rand.RangeInclusive(minRoomSizeA2, minRoomSizeB2);
+                    splitPoint = Rand.RangeInclusive(splitMin2, splitMax2);
                 }
             } else {
-                splitPoint = Rand.RangeInclusive(minRoomSizeA1, minRoomSizeB1);
+                splitPoint = Rand.RangeInclusive(splitMin1, splitMax1);
             }
 
             if (direction == -1) {
@@ -467,7 +465,7 @@ namespace application {
 
         protected override void draw() {
             graphics.Clear(Color.Black);
-            drawRooms(rooms, Pens.Black);
+            drawRooms(rooms, Pens.Black, Brushes.White);
             drawDoors(doors, Pens.Red);
             DrawHallways(hallways, Pens.Crimson, Pens.Orange);
         }
@@ -485,7 +483,8 @@ namespace application {
                 graphics.FillRectangle(fillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
                 graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
             } else {
-                base.drawRoom(pRoom, pWallColor, pFillColor);
+                if(pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
+                graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
             }
         }
 
