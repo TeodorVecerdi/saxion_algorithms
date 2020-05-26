@@ -4,7 +4,7 @@ using System.Drawing;
 namespace application {
     /// <summary>
     ///     Representation of a Rectangle. Just like <see cref="System.Drawing.Rectangle" /> but Bottom and Right properties
-    ///     return the correct point for Bottom and Right instead of one unit too much
+    ///     return the 'correct' point for Bottom and Right instead of one unit too much
     /// </summary>
     public struct Rect : IEquatable<Rect>, IEquatable<Rectangle> {
         public int X;

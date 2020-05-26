@@ -8,7 +8,7 @@ namespace application {
         private NiceDungeon dungeon;
 
         public NiceNodeGraph(NiceDungeon dungeon) : base((int) (dungeon.size.Width * dungeon.scale), (int) (dungeon.size.Height * dungeon.scale), (int) dungeon.scale / 3) {
-            Debug.Assert(dungeon != null, "Please pass in a dungeon.");
+            // Debug.Assert(dungeon != null, "Please pass in a dungeon.");
             this.dungeon = dungeon;
         }
 

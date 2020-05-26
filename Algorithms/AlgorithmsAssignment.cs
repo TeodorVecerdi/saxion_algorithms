@@ -28,8 +28,8 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 25; //TODO: experiment with changing this
-        private const int MIN_ROOM_SIZE = 6; //TODO: use this setting in your dungeon generator
+        private const int SCALE = 20; //TODO: experiment with changing this
+        private const int MIN_ROOM_SIZE = 8; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
@@ -96,7 +96,7 @@ namespace application {
             //TODO: Comment out GoodDungeon above, implement an ExcellentDungeon class, and uncomment it below
 
             //_dungeon = new ExcellentDungeon(size);
-            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good, 1200);
 
             if (_dungeon != null) {
                 //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
@@ -122,7 +122,7 @@ namespace application {
             //_graph = new SampleDungeonNodeGraph(_dungeon);
             //_graph = new HighLevelDungeonNodeGraph(_dungeon);
             //_graph = new LowLevelDungeonNodeGraph(_dungeon);
-            _graph = new NiceNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new NiceNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ namespace application {
             //TODO: Comment out the SampleNodeGraphAgent again, implement an OffGraphWayPointAgent class and uncomment it below
 
             // _agent = new SampleNodeGraphAgent(_graph);
-            _agent = new OffGraphWayPointAgent(_graph);
+            // _agent = new OffGraphWayPointAgent(_graph);
 
             ////////////////////////////////////////////////////////////
             //Assignment 2.2 Good (Optional) TiledView

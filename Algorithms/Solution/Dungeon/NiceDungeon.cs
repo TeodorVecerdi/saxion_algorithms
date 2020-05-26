@@ -1,83 +1,91 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using GXPEngine;
 using Debug = application.utils.Debug;
-using ID = System.Int32;
+using DungeonDataType = System.ValueTuple<System.Collections.Generic.Dictionary<int, application.RoomDefinition>, System.Collections.Generic.Dictionary<int, application.DoorDefinition>, System.Collections.Generic.Dictionary<int, application.HallwayDefinition>>;
 
 namespace application {
     public class NiceDungeon : Dungeon {
         public readonly List<Hallway> hallways = new List<Hallway>();
-        
+
         private readonly int canvasScale;
         private readonly EasyDraw debug;
         private readonly DungeonType dungeonType;
         private int minimumRoomSize;
 
         // ID = System.Int32
-        private Dictionary<ID, RoomDefinition> roomDefinitions;
-        private Dictionary<ID, DoorDefinition> doorDefinitions;
-        private Dictionary<ID, HallwayDefinition> hallwayDefinitions;
-        private Dictionary<ID, int> doorCounts;
-        private Dictionary<ID, List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>> roomAdjacencyLists;
+        private Dictionary<int, RoomDefinition> roomDefinitions;
+        private Dictionary<int, DoorDefinition> doorDefinitions;
+        private Dictionary<int, HallwayDefinition> hallwayDefinitions;
+        private Dictionary<int, int> doorCounts;
+        private Dictionary<int, List<(int roomID, Direction direction, RoomAdjacencyType adjacencyType)>> roomAdjacencyLists;
+        
+        public DungeonDataType DungeonData => (roomDefinitions, doorDefinitions, hallwayDefinitions);
 
-
-        public (Dictionary<ID, RoomDefinition> Rooms, Dictionary<ID, DoorDefinition> Doors, Dictionary<ID, HallwayDefinition> Hallways)
-            DungeonData => (roomDefinitions, doorDefinitions, hallwayDefinitions);
-
-        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType, int randomSeed = 1233) : base(pSize) {
+        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType, int randomSeed = 0) : base(pSize) {
             this.canvasScale = canvasScale;
             this.dungeonType = dungeonType;
-            debug = new EasyDraw(pSize.Width * canvasScale, pSize.Height * canvasScale);
-            debug.scale = 1f / canvasScale;
+            debug = new EasyDraw(pSize.Width * canvasScale, pSize.Height * canvasScale) {scale = 1f / canvasScale};
             AddChild(debug);
-            
+
+            if (randomSeed == -1) {
+                randomSeed = Environment.TickCount;
+            }
             Rand.PushState(randomSeed);
         }
 
         protected override void generate(int minimumRoomSize) {
             this.minimumRoomSize = minimumRoomSize;
 
-            roomDefinitions = new Dictionary<ID, RoomDefinition>();
-            doorDefinitions = new Dictionary<ID, DoorDefinition>();
-            hallwayDefinitions = new Dictionary<ID, HallwayDefinition>();
-            doorCounts = new Dictionary<ID, int>();
-            roomAdjacencyLists = new Dictionary<ID, List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>>();
+            // Initialize the dictionaries/data structures used by the algorithm
+            Initialize();
 
             // Generate the dungeon rooms
-            GenerateRooms_Recurse(new Rectangle(Point.Empty, size));
-            // GenerateRooms_Iter(new Rectangle(Point.Empty, size));
+            GenerateRooms_Recursive(new Rectangle(Point.Empty, size));
+
+            // GenerateRooms_Iterative(new Rectangle(Point.Empty, size));
 
             // Remove rooms which have the area the same as maximum and minimum area
-            if (dungeonType >= DungeonType.Good)
+            if ((dungeonType & DungeonType.Good) != DungeonType.None)
                 CleanRooms();
 
             GenerateRoomAdjacencyLists();
 
             // Link the rooms with doors
             GenerateDoors_Full(); // connect all rooms to all adjacent rooms
+
             // GenerateDoors_Min(); // only the minimum required amount of doors
 
-            if (dungeonType == DungeonType.Excellent) {
+            if ((dungeonType & DungeonType.Excellent) != DungeonType.None) {
                 ShrinkRooms(); // Make rooms smaller in size by some amount
-                CleanDoors();
+                CleanDoors(); // Remove doors which are no longer valid, move valid doors to a valid spot
                 ConvertDoorsToHallways();
             }
 
-            if (dungeonType >= DungeonType.Good)
-                CalculateDoorCount(); // this is used for the custom drawing (Paint all rooms with 0 doors red, 1 door orange, 2 doors yellow, 3+ doors green)
+            if ((dungeonType & DungeonType.Good) != DungeonType.None)
+                CalculateDoorCount(); // Custom room drawing (Paint all rooms with 0 doors red, 1 door orange, 2 doors yellow, 3+ doors green)
 
             // Convert the generated dungeon room, door and hallway definitions to actual Room, Door and Hallway objects
             CreateDungeon();
-            
+
             // Show debug information such as room id, door id, door from->to room ids   
             DrawDebug();
+        }
+
+        private void Initialize() {
+            roomDefinitions = new Dictionary<int, RoomDefinition>();
+            doorDefinitions = new Dictionary<int, DoorDefinition>();
+            hallwayDefinitions = new Dictionary<int, HallwayDefinition>();
+            doorCounts = new Dictionary<int, int>();
+            roomAdjacencyLists = new Dictionary<int, List<(int roomID, Direction direction, RoomAdjacencyType adjacencyType)>>();
         }
 
         #region Generate Room Definitions
         private const bool randomSplitDirection = false;
 
-        private void GenerateRooms_Recurse(Rectangle currentRoomSize) {
+        private void GenerateRooms_Recursive(Rectangle currentRoomSize) {
             int direction; // -1 = horizontal, 1 = vertical
             if (randomSplitDirection) direction = Rand.Sign;
             else {
@@ -108,17 +116,17 @@ namespace application {
             } else {
                 splitPoint = Rand.RangeInclusive(splitMin1, splitMax1);
             }
-
+            
             if (direction == -1) {
-                GenerateRooms_Recurse(new Rectangle(currentRoomSize.X, currentRoomSize.Y, splitPoint + 1 - currentRoomSize.X, currentRoomSize.Height));
-                GenerateRooms_Recurse(new Rectangle(splitPoint, currentRoomSize.Y, currentRoomSize.Width - splitPoint + currentRoomSize.X, currentRoomSize.Height));
+                GenerateRooms_Recursive(new Rectangle(currentRoomSize.X, currentRoomSize.Y, splitPoint + 1 - currentRoomSize.X, currentRoomSize.Height));
+                GenerateRooms_Recursive(new Rectangle(splitPoint, currentRoomSize.Y, currentRoomSize.Width - splitPoint + currentRoomSize.X, currentRoomSize.Height));
             } else {
-                GenerateRooms_Recurse(new Rectangle(currentRoomSize.X, currentRoomSize.Y, currentRoomSize.Width, splitPoint + 1 - currentRoomSize.Y));
-                GenerateRooms_Recurse(new Rectangle(currentRoomSize.X, splitPoint, currentRoomSize.Width, currentRoomSize.Height - splitPoint + currentRoomSize.Y));
+                GenerateRooms_Recursive(new Rectangle(currentRoomSize.X, currentRoomSize.Y, currentRoomSize.Width, splitPoint + 1 - currentRoomSize.Y));
+                GenerateRooms_Recursive(new Rectangle(currentRoomSize.X, splitPoint, currentRoomSize.Width, currentRoomSize.Height - splitPoint + currentRoomSize.Y));
             }
         }
 
-        private void GenerateRooms_Iter(Rectangle startingSize) {
+        private void GenerateRooms_Iterative(Rectangle startingSize) {
             var availableRooms = new List<Rectangle>();
             var finalRooms = new List<Rectangle>();
             availableRooms.Add(startingSize);
@@ -187,8 +195,8 @@ namespace application {
             }
         }
 
-        private List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)> FindAdjacentRooms(ID roomID) {
-            var adjacentRooms = new List<(ID roomID, Direction direction, RoomAdjacencyType adjacencyType)>();
+        private List<(int roomID, Direction direction, RoomAdjacencyType adjacencyType)> FindAdjacentRooms(int roomID) {
+            var adjacentRooms = new List<(int roomID, Direction direction, RoomAdjacencyType adjacencyType)>();
             foreach (var possibleRoomID in roomDefinitions.Keys) {
                 if (possibleRoomID == roomID) continue;
                 var (direction, adjacencyType) = CheckAdjacent(roomID, possibleRoomID);
@@ -199,7 +207,7 @@ namespace application {
             return adjacentRooms;
         }
 
-        private (Direction, RoomAdjacencyType) CheckAdjacent(ID roomAid, ID roomBid) {
+        private (Direction, RoomAdjacencyType) CheckAdjacent(int roomAid, int roomBid) {
             var roomAFullRect = roomDefinitions[roomAid].Area;
             var roomBFullRect = roomDefinitions[roomBid].Area;
 
@@ -224,7 +232,7 @@ namespace application {
         #region Generate Door Definitions
         private void GenerateDoors_Full() {
             // keep track of which rooms are already connected so we don't connect them again
-            var connectedRooms = new HashSet<(ID, ID)>();
+            var connectedRooms = new HashSet<(int, int)>();
 
             // generates doors between all adjacent rooms
             foreach (var roomID in roomDefinitions.Keys) {
@@ -247,7 +255,7 @@ namespace application {
             DFS(roomDefinitions.Keys.First(), visited);
         }
 
-        private void DFS(ID startNode, Dictionary<ID, bool> visited) {
+        private void DFS(int startNode, Dictionary<int, bool> visited) {
             visited[startNode] = true;
             foreach (var room in roomAdjacencyLists[startNode]) {
                 if (visited[room.roomID]) continue;
@@ -258,7 +266,7 @@ namespace application {
             }
         }
 
-        private DoorDefinition CreateDoor(ID roomAid, (ID roomID, Direction direction, RoomAdjacencyType adjacencyType) adjacentRoom) {
+        private DoorDefinition CreateDoor(int roomAid, (int roomID, Direction direction, RoomAdjacencyType adjacencyType) adjacentRoom) {
             var roomAArea = roomDefinitions[roomAid].Area;
             var roomBArea = roomDefinitions[adjacentRoom.roomID].Area;
             if (adjacentRoom.direction == Direction.Horizontal) {
@@ -360,7 +368,7 @@ namespace application {
 
         /// <summary>
         /// Removes invalid doors by calculating the minimum and maximum position along the wall the door can have and checking if
-        /// it's valid (min &lt;= max),and moves doors to the correct place if they are not correct anymore (the two rooms can still
+        /// it's valid (min &lt;= max), and moves doors to the correct place if they are not correct anymore (the two rooms can still
         /// be connected but the door is placed in the wrong position as a result of shrinking the rooms)
         /// </summary>
         private void CleanDoors() {
@@ -471,7 +479,7 @@ namespace application {
         }
 
         protected override void drawRoom(Room pRoom, Pen pWallColor, Brush pFillColor = null) {
-            if (dungeonType >= DungeonType.Good) {
+            if ((dungeonType & DungeonType.Good) != DungeonType.None) {
                 var doorCount = doorCounts[pRoom.ID];
 
                 Brush fillColor;
@@ -483,7 +491,7 @@ namespace application {
                 graphics.FillRectangle(fillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
                 graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
             } else {
-                if(pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
+                if (pFillColor != null) graphics.FillRectangle(pFillColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
                 graphics.DrawRectangle(pWallColor, pRoom.Area.Left, pRoom.Area.Top, pRoom.Area.Width - 0.5f, pRoom.Area.Height - 0.5f);
             }
         }
