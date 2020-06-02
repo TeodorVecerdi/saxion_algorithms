@@ -4,10 +4,10 @@ using System.Linq;
 using application.utils;
 
 namespace application {
-    public class NiceNodeGraph : NodeGraph {
+    public class HighLevelNodeGraph : NodeGraph {
         private NiceDungeon dungeon;
 
-        public NiceNodeGraph(NiceDungeon dungeon) : base((int) (dungeon.size.Width * dungeon.scale), (int) (dungeon.size.Height * dungeon.scale), (int) dungeon.scale / 3) {
+        public HighLevelNodeGraph(NiceDungeon dungeon) : base((int) (dungeon.size.Width * dungeon.scale), (int) (dungeon.size.Height * dungeon.scale), (int) dungeon.scale / 3) {
             // Debug.Assert(dungeon != null, "Please pass in a dungeon.");
             this.dungeon = dungeon;
         }

@@ -28,8 +28,8 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 20; //TODO: experiment with changing this
-        private const int MIN_ROOM_SIZE = 8; //TODO: use this setting in your dungeon generator
+        private const int SCALE = 30; //TODO: experiment with changing this
+        private const int MIN_ROOM_SIZE = 5; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
@@ -120,9 +120,8 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            //_graph = new HighLevelDungeonNodeGraph(_dungeon);
-            //_graph = new LowLevelDungeonNodeGraph(_dungeon);
-            _graph = new NiceNodeGraph(_dungeon as NiceDungeon);
+            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////

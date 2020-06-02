@@ -76,7 +76,8 @@
         <Compile Include="Solution\Dungeon\Utils\RoomAdjacencyType.cs" />
         <Compile Include="Solution\Dungeon\Utils\RoomDefinition.cs" />
         <Compile Include="Solution\NodeGraph\ConnectionData.cs" />
-        <Compile Include="Solution\NodeGraph\NiceNodeGraph.cs" />
+        <Compile Include="Solution\NodeGraph\HighLevelNodeGraph.cs" />
+        <Compile Include="Solution\NodeGraph\LowLevelNodeGraph.cs" />
         <Compile Include="Solution\NodeGraph\NodeData.cs" />
         <Compile Include="Solution\TiledDungeonView.cs" />
         <Compile Include="Utils\Debug.cs" />
