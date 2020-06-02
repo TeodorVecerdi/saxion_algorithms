@@ -23,8 +23,9 @@ namespace application {
         private Dictionary<int, List<(int roomID, Direction direction, RoomAdjacencyType adjacencyType)>> roomAdjacencyLists;
         
         public DungeonDataType DungeonData => (roomDefinitions, doorDefinitions, hallwayDefinitions);
+        public DungeonType DungeonType => dungeonType;
 
-        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType, int randomSeed = 0) : base(pSize) {
+        public NiceDungeon(Size pSize, int canvasScale, DungeonType dungeonType, int randomSeed = -1) : base(pSize) {
             this.canvasScale = canvasScale;
             this.dungeonType = dungeonType;
             debug = new EasyDraw(pSize.Width * canvasScale, pSize.Height * canvasScale) {scale = 1f / canvasScale};

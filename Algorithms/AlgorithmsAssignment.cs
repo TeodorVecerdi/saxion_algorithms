@@ -96,7 +96,7 @@ namespace application {
             //TODO: Comment out GoodDungeon above, implement an ExcellentDungeon class, and uncomment it below
 
             //_dungeon = new ExcellentDungeon(size);
-            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good, 1200);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good);
 
             if (_dungeon != null) {
                 //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
@@ -122,7 +122,7 @@ namespace application {
             //_graph = new SampleDungeonNodeGraph(_dungeon);
             //_graph = new HighLevelDungeonNodeGraph(_dungeon);
             //_graph = new LowLevelDungeonNodeGraph(_dungeon);
-            // _graph = new NiceNodeGraph(_dungeon as NiceDungeon);
+            _graph = new NiceNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -143,8 +143,8 @@ namespace application {
             //TODO: Study the SampleTileView class and try it out below
             //TODO: Comment out the SampleTiledView again, implement the TiledDungeonView	and uncomment it below
 
-            //_tiledView = new SampleTiledView(_dungeon, TileType.GROUND);
-            //_tiledView = new TiledDungeonView(_dungeon, TileType.GROUND); 
+            // _tiledView = new SampleTiledView(_dungeon, TileType.GROUND);
+            _tiledView = new TiledDungeonView(_dungeon as NiceDungeon, TileType.WALL); 
             if (_tiledView != null) _tiledView.Generate();
 
             ////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ namespace application {
             //
             //TODO: Comment out the OffGraphWayPointAgent above, implement an OnGraphWayPointAgent class and uncomment it below
 
-            //_agent = new OnGraphWayPointAgent(_graph);	
+            _agent = new OnGraphWayPointAgent(_graph);	
 
             //////////////////////////////////////////////////////////////
             //Assignment 2.3 Excellent (Optional) LowLevelDungeonNodeGraph
@@ -199,8 +199,8 @@ namespace application {
 
             if (grid != null) AddChild(grid);
             if (_dungeon != null) AddChild(_dungeon);
-            if (_graph != null) AddChild(_graph);
             if (_tiledView != null) AddChild(_tiledView);
+            if (_graph != null) AddChild(_graph);
             if (_pathFinder != null) AddChild(_pathFinder); //pathfinder on top of that
             if (_graph != null) AddChild(new NodeLabelDrawer(_graph)); //node label display on top of that
             if (_agent != null) AddChild(_agent); //and last but not least the agent itself
