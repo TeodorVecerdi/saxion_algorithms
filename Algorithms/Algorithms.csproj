@@ -79,6 +79,8 @@
         <Compile Include="Solution\NodeGraph\HighLevelNodeGraph.cs" />
         <Compile Include="Solution\NodeGraph\LowLevelNodeGraph.cs" />
         <Compile Include="Solution\NodeGraph\NodeData.cs" />
+        <Compile Include="Solution\Pathfinding\BreadthFirstPathFinder.cs" />
+        <Compile Include="Solution\Pathfinding\RecursivePathFinder.cs" />
         <Compile Include="Solution\TiledDungeonView.cs" />
         <Compile Include="Utils\Debug.cs" />
         <Compile Include="Utils\Extensions.cs" />

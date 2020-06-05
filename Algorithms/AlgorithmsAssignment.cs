@@ -28,8 +28,8 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 30; //TODO: experiment with changing this
-        private const int MIN_ROOM_SIZE = 5; //TODO: use this setting in your dungeon generator
+        private const int SCALE = 15; //TODO: experiment with changing this
+        private const int MIN_ROOM_SIZE = 8; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
@@ -96,7 +96,7 @@ namespace application {
             //TODO: Comment out GoodDungeon above, implement an ExcellentDungeon class, and uncomment it below
 
             //_dungeon = new ExcellentDungeon(size);
-            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good, 212212);
 
             if (_dungeon != null) {
                 //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
@@ -120,8 +120,8 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
-            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -171,14 +171,14 @@ namespace application {
             //TODO: Study the SamplePathFinder class and try it out
             //TODO: Comment out the SamplePathFinder, implement a RecursivePathFinder and uncomment it below
 
-            //_pathFinder = new SamplePathFinder(_graph);
-            //_pathFinder = new RecursivePathFinder(_graph);
+            // _pathFinder = new SamplePathFinder(_graph);
+            // _pathFinder = new RecursivePathFinder(_graph);
 
             //////////////////////////////////////////////////////////////////////////
             //Assignment 3.1 Sufficient (Mandatory) - BreadthFirst Pathfinding
             //
             //TODO: Comment out the RecursivePathFinder above, implement a BreadthFirstPathFinder and uncomment it below
-            //_pathFinder = new BreadthFirstPathFinder(_graph);
+            _pathFinder = new BreadthFirstPathFinder(_graph);
 
             //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
             //_agent = new PathFindingAgent(_graph, _pathFinder);
