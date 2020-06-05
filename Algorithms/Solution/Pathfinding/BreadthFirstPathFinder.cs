@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace application {
-    internal class BreadthFirstPathFinder : PathFinder{
+    internal class BreadthFirstPathFinder : PathFinder {
         public BreadthFirstPathFinder(NodeGraph pGraph) : base(pGraph) { }
         protected override List<Node> generate(Node start, Node target) {
             // Walk the graph and 'build' the parentDictionary

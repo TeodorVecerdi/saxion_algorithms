@@ -120,8 +120,8 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            // _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
-            _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
+            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ namespace application {
             //
             //TODO: Comment out the OffGraphWayPointAgent above, implement an OnGraphWayPointAgent class and uncomment it below
 
-            _agent = new OnGraphWayPointAgent(_graph);	
+            // _agent = new OnGraphWayPointAgent(_graph);	
 
             //////////////////////////////////////////////////////////////
             //Assignment 2.3 Excellent (Optional) LowLevelDungeonNodeGraph
@@ -181,7 +181,7 @@ namespace application {
             _pathFinder = new BreadthFirstPathFinder(_graph);
 
             //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
-            //_agent = new PathFindingAgent(_graph, _pathFinder);
+            _agent = new PathFindingAgent(_graph, _pathFinder);
 
             /////////////////////////////////////////////////
             //Assignment 3.2 Good & 3.3 Excellent (Optional)
