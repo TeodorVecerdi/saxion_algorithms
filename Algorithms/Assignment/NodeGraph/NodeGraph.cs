@@ -40,10 +40,10 @@ public abstract class NodeGraph : Canvas {
     public NodeGraph(int pWidth, int pHeight, int pNodeSize) : base(pWidth, pHeight) {
         nodeSize = pNodeSize;
 
-        Console.WriteLine("\n-----------------------------------------------------------------------------");
-        Console.WriteLine(this.GetType().Name + " created.");
-        Console.WriteLine("* (Shift) LeftClick/RightClick on nodes to trigger the corresponding events.");
-        Console.WriteLine("-----------------------------------------------------------------------------");
+        application.utils.Debug.Log("\n-----------------------------------------------------------------------------");
+        application.utils.Debug.Log(this.GetType().Name + " created.");
+        application.utils.Debug.Log("* (Shift) LeftClick/RightClick on nodes to trigger the corresponding events.");
+        application.utils.Debug.Log("-----------------------------------------------------------------------------");
     }
 
     /**
@@ -61,14 +61,14 @@ public abstract class NodeGraph : Canvas {
 	 * but override generate (note the lower case) instead, calling AddConnection as required.
 	 */
     public void Generate() {
-        System.Console.WriteLine(this.GetType().Name + ".Generate: Generating graph...");
+        application.utils.Debug.Log(this.GetType().Name + ".Generate: Generating graph...");
 
         //always remove all nodes before generating the graph, as it might have been generated previously
         nodes.Clear();
         generate();
         draw();
 
-        System.Console.WriteLine(this.GetType().Name + ".Generate: Graph generated.");
+        application.utils.Debug.Log(this.GetType().Name + ".Generate: Graph generated.");
     }
 
     protected abstract void generate();

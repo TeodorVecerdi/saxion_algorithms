@@ -35,13 +35,13 @@ abstract class PathFinder : Canvas
 		_nodeGraph.OnNodeShiftLeftClicked += (node) => { _startNode = node; draw(); };
 		_nodeGraph.OnNodeShiftRightClicked += (node) => { _endNode = node; draw(); };
 
-		Console.WriteLine("\n-----------------------------------------------------------------------------");
-		Console.WriteLine(this.GetType().Name + " created.");
-		Console.WriteLine("* Shift-LeftClick to set the starting node.");
-		Console.WriteLine("* Shift-RightClick to set the target node.");
-		Console.WriteLine("* G to generate the Path.");
-		Console.WriteLine("* C to clear the Path.");
-		Console.WriteLine("-----------------------------------------------------------------------------");
+		application.utils.Debug.Log("\n-----------------------------------------------------------------------------");
+		application.utils.Debug.Log(this.GetType().Name + " created.");
+		application.utils.Debug.Log("* Shift-LeftClick to set the starting node.");
+		application.utils.Debug.Log("* Shift-RightClick to set the target node.");
+		application.utils.Debug.Log("* G to generate the Path.");
+		application.utils.Debug.Log("* C to clear the Path.");
+		application.utils.Debug.Log("-----------------------------------------------------------------------------");
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ abstract class PathFinder : Canvas
 
 	public List<Node> Generate(Node pFrom, Node pTo)
 	{
-		System.Console.WriteLine(this.GetType().Name + ".Generate: Generating path...");
+		application.utils.Debug.Log(this.GetType().Name + ".Generate: Generating path...");
 
 		_lastCalculatedPath = null;
 		_startNode = pFrom;
@@ -57,7 +57,7 @@ abstract class PathFinder : Canvas
 
 		if (_startNode == null || _endNode == null)
 		{
-			Console.WriteLine("Please specify start and end node before trying to generate a path.");
+			application.utils.Debug.Log("Please specify start and end node before trying to generate a path.");
 		}
 		else
 		{
@@ -66,7 +66,7 @@ abstract class PathFinder : Canvas
 
 		draw();
 
-		System.Console.WriteLine(this.GetType().Name + ".Generate: Path generated.");
+		application.utils.Debug.Log(this.GetType().Name + ".Generate: Path generated.");
 		return _lastCalculatedPath;
 	}
 

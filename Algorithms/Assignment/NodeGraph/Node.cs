@@ -33,7 +33,6 @@ public class Node {
 
         //use an autoincrementing id as label
         id = "" + lastID++;
-        System.Console.WriteLine(id);
     }
 
     public override string ToString() {

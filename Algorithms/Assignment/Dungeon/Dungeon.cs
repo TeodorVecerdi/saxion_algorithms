@@ -50,7 +50,7 @@ public abstract class Dungeon : Canvas
 		_texture.Unbind();
 		/**/
 
-		System.Console.WriteLine(this.GetType().Name + " created.");
+		application.utils.Debug.Log(this.GetType().Name + " created.");
 	}
 
 	/**
@@ -61,14 +61,14 @@ public abstract class Dungeon : Canvas
 	 */
 	public void Generate(int pMinimumRoomSize)
 	{
-		System.Console.WriteLine(this.GetType().Name + ".Generate:Generating dungeon...");
+		application.utils.Debug.Log(this.GetType().Name + ".Generate:Generating dungeon...");
 
 		rooms.Clear();
 		doors.Clear();
 
 		generate(pMinimumRoomSize);
 
-		System.Console.WriteLine(this.GetType().Name + ".Generate:Dungeon generated.");
+		application.utils.Debug.Log(this.GetType().Name + ".Generate:Dungeon generated.");
 
 		if (autoDrawAfterGenerate) draw();
 	}

@@ -13,10 +13,10 @@ class NodeLabelDrawer : Canvas
 
 	public NodeLabelDrawer(NodeGraph pNodeGraph) : base(pNodeGraph.width, pNodeGraph.height)
 	{
-		Console.WriteLine("\n-----------------------------------------------------------------------------");
-		Console.WriteLine("NodeLabelDrawer created.");
-		Console.WriteLine("* L key to toggle node label display.");
-		Console.WriteLine("-----------------------------------------------------------------------------");
+		application.utils.Debug.Log("\n-----------------------------------------------------------------------------");
+		application.utils.Debug.Log("NodeLabelDrawer created.");
+		application.utils.Debug.Log("* L key to toggle node label display.");
+		application.utils.Debug.Log("-----------------------------------------------------------------------------");
 
 		_labelFont = new Font(SystemFonts.DefaultFont.FontFamily, pNodeGraph.nodeSize, FontStyle.Bold);
 		_graph = pNodeGraph;
