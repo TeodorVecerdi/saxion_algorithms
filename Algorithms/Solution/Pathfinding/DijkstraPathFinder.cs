@@ -15,6 +15,7 @@ namespace application {
         }
 
         private Dictionary<Node, Node> Dijkstra(Node start, Node target) {
+            int nodeCoverage = 0;
             Dictionary<Node, Node> previous = new Dictionary<Node, Node>();
             Dictionary<Node, float> distance = new Dictionary<Node, float>();
             HashSet<Node> nodes = new HashSet<Node>();
@@ -30,12 +31,15 @@ namespace application {
 
             // main loop
             while (nodes.Count > 0) {
+                nodeCoverage++;
                 Node current = FindNodeWithMinimumDistance(nodes, distance);
                 nodes.Remove(current);
 
                 // terminate the search early if we reached the target
-                if (current == target)
+                if (current == target) {
+                    Debug.LogInfo($"Dijkstra Node Coverage: {nodeCoverage}/{_nodeGraph.nodes.Count}");
                     return previous;
+                }
 
                 foreach (Node adjacent in current.connections) {
                     // skip the node if we already visited it
@@ -51,6 +55,7 @@ namespace application {
                 }
             }
 
+            Debug.LogInfo($"Dijkstra Node Coverage: {nodeCoverage}/{_nodeGraph.nodes.Count}");
             return previous;
         }
 
@@ -58,7 +63,7 @@ namespace application {
             float minDistance = float.MaxValue;
             Node minDistanceNode = null;
 
-            foreach (var node in nodes) {
+            foreach (Node node in nodes) {
                 if (distance[node] >= minDistance)
                     continue;
 

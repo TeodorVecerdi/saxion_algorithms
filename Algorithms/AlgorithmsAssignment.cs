@@ -119,8 +119,8 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            // _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
-            _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
+            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -190,7 +190,8 @@ namespace application {
             //PathFindingAgent below the creation of your PathFinder!
 
             // _pathFinder = new BreadthFirstPathFinder(_graph);
-            _pathFinder = new DijkstraPathFinder(_graph);
+            // _pathFinder = new DijkstraPathFinder(_graph);
+            _pathFinder = new AStarPathFinder(_graph, HeuristicFunction.Euclidean);
             _agent = new PathFindingAgent(_graph, _pathFinder);
 
             //------------------------------------------------------------------------------------------
