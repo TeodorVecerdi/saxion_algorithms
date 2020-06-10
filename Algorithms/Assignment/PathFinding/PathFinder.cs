@@ -32,8 +32,10 @@ abstract class PathFinder : Canvas
 	public PathFinder (NodeGraph pGraph) : base (pGraph.width, pGraph.height)
 	{
 		_nodeGraph = pGraph;
-		_nodeGraph.OnNodeShiftLeftClicked += (node) => { _startNode = node; draw(); };
-		_nodeGraph.OnNodeShiftRightClicked += (node) => { _endNode = node; draw(); };
+
+		// TODO: Disabled these because of conflict with disabling/enabling nodes
+		// _nodeGraph.OnNodeShiftLeftClicked += (node) => { _startNode = node; draw(); };
+		// _nodeGraph.OnNodeShiftRightClicked += (node) => { _endNode = node; draw(); };
 
 		application.utils.Debug.Log("\n-----------------------------------------------------------------------------");
 		application.utils.Debug.Log(this.GetType().Name + " created.");

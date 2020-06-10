@@ -8,6 +8,7 @@ using System.Drawing;
 class NodeLabelDrawer : Canvas
 {
 	private Font _labelFont;
+	private Font _fullyConnectedFont;
 	private bool _showLabels = false;
 	private NodeGraph _graph = null;
 
@@ -19,7 +20,9 @@ class NodeLabelDrawer : Canvas
 		application.utils.Debug.Log("-----------------------------------------------------------------------------");
 
 		_labelFont = new Font(SystemFonts.DefaultFont.FontFamily, pNodeGraph.nodeSize, FontStyle.Bold);
+		_fullyConnectedFont = new Font(SystemFonts.DefaultFont.FontFamily, 32, FontStyle.Bold);
 		_graph = pNodeGraph;
+		DrawFullyConnectedIndicator();
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +32,12 @@ class NodeLabelDrawer : Canvas
 	//this has to be virtual otherwise the subclass won't pick it up
 	protected virtual void Update()
 	{
+		if (_graph.FullyConnectedStateChanged) {
+			_graph.FullyConnectedStateChanged = false;
+			graphics.Clear(Color.Transparent);
+			if (_showLabels) drawLabels();
+			DrawFullyConnectedIndicator();			
+		}
 		//toggle label display when L is pressed
 		if (Input.GetKeyDown(Key.L))
 		{
@@ -50,6 +59,11 @@ class NodeLabelDrawer : Canvas
 	{
 		SizeF size = graphics.MeasureString(pNode.id.ToString(), _labelFont);
 		graphics.DrawString(pNode.id.ToString(), _labelFont, Brushes.Black, pNode.location.X - size.Width / 2, pNode.location.Y - size.Height / 2);
+	}
+
+	protected void DrawFullyConnectedIndicator() {
+		string connected = _graph.IsFullyConnected ? "Fully Connected" : "Not Fully Connected";
+		graphics.DrawString(connected, _fullyConnectedFont, _graph.IsFullyConnected ? Brushes.GreenYellow : Brushes.Crimson, 0, 0);
 	}
 
 }

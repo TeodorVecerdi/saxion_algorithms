@@ -28,12 +28,11 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 10; //TODO: experiment with changing this
+        private const int SCALE = 15; //TODO: experiment with changing this
         private const int MIN_ROOM_SIZE = 10; //TODO: use this setting in your dungeon generator
 
         public AlgorithmsAssignment() : base(1280, 720, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
-
             /////////////////////////////////////////////////////////////////////////////////////////
             //	BASE SETUP - FEEL FREE TO SKIP
 
@@ -120,8 +119,8 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
-            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
             if (_graph != null) _graph.Generate();
 
             /////////////////////////////////////////////////////////////
@@ -143,7 +142,7 @@ namespace application {
             //TODO: Comment out the SampleTiledView again, implement the TiledDungeonView	and uncomment it below
 
             // _tiledView = new SampleTiledView(_dungeon, TileType.GROUND);
-            _tiledView = new TiledDungeonView(_dungeon as NiceDungeon, TileType.WALL); 
+            _tiledView = new TiledDungeonView(_dungeon as NiceDungeon, TileType.WALL);
             if (_tiledView != null) _tiledView.Generate();
 
             ////////////////////////////////////////////////////////////
@@ -189,7 +188,7 @@ namespace application {
             //For example for A*, you must choose a setup in which it is possible to demonstrate your 
             //algorithm works. Find the best place to add your code, and don't forget to move the
             //PathFindingAgent below the creation of your PathFinder!
-            
+
             // _pathFinder = new BreadthFirstPathFinder(_graph);
             _pathFinder = new DijkstraPathFinder(_graph);
             _agent = new PathFindingAgent(_graph, _pathFinder);

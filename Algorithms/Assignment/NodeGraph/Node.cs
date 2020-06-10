@@ -13,6 +13,7 @@ using System.Drawing;
  */
 public class Node {
     public readonly List<Node> connections = new List<Node>();
+    public bool isEnabled = true;
 
     //node data
     public readonly Point location;

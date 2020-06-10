@@ -24,6 +24,9 @@ public abstract class NodeGraph : Canvas {
     public Action<Node> OnNodeShiftLeftClicked = delegate { };
     public Action<Node> OnNodeShiftRightClicked = delegate { };
 
+    public bool FullyConnectedStateChanged;
+    public bool IsFullyConnected { get; private set; } = true;
+
     //required for node highlighting on mouse over
     private Node _nodeUnderMouse = null;
 
@@ -33,6 +36,8 @@ public abstract class NodeGraph : Canvas {
     private Pen _outlinePen = new Pen(Color.Black, 2.1f);
     private Brush _defaultNodeColor = Brushes.CornflowerBlue;
     private Brush _highlightedNodeColor = Brushes.Cyan;
+    private Brush _defaultDisabledNodeColor = Brushes.Maroon;
+    private Brush _highlightedDisabledNodeColor = Brushes.Red;
 
     /** 
 	 * Construct a nodegraph with the given screen dimensions, eg 800x600
@@ -44,6 +49,27 @@ public abstract class NodeGraph : Canvas {
         application.utils.Debug.Log(this.GetType().Name + " created.");
         application.utils.Debug.Log("* (Shift) LeftClick/RightClick on nodes to trigger the corresponding events.");
         application.utils.Debug.Log("-----------------------------------------------------------------------------");
+
+        
+        // Disable a node
+        OnNodeShiftLeftClicked += node => {
+            node.isEnabled = false;
+            bool isConnected = CheckGraphFullyConnected();
+            if (isConnected != IsFullyConnected)
+                FullyConnectedStateChanged = true;
+
+            IsFullyConnected = isConnected;
+        };
+        
+        // Enable a node
+        OnNodeShiftRightClicked += node => {
+            node.isEnabled = true;
+            bool isConnected = CheckGraphFullyConnected();
+            if (isConnected != IsFullyConnected)
+                FullyConnectedStateChanged = true;
+
+            IsFullyConnected = isConnected;
+        };
     }
 
     /**
@@ -83,7 +109,7 @@ public abstract class NodeGraph : Canvas {
     }
 
     protected virtual void drawNodes() {
-        foreach (Node node in nodes) drawNode(node, _defaultNodeColor);
+        foreach (Node node in nodes) drawNode(node, node.isEnabled?_defaultNodeColor:_defaultDisabledNodeColor);
     }
 
     protected virtual void drawNode(Node pNode, Brush pColor) {
@@ -147,9 +173,9 @@ public abstract class NodeGraph : Canvas {
 
         //do mouse node hightlighting
         if (newNodeUnderMouse != _nodeUnderMouse) {
-            if (_nodeUnderMouse != null) drawNode(_nodeUnderMouse, _defaultNodeColor);
+            if (_nodeUnderMouse != null) drawNode(_nodeUnderMouse, _nodeUnderMouse.isEnabled?_defaultNodeColor:_defaultDisabledNodeColor);
             _nodeUnderMouse = newNodeUnderMouse;
-            if (_nodeUnderMouse != null) drawNode(_nodeUnderMouse, _highlightedNodeColor);
+            if (_nodeUnderMouse != null) drawNode(_nodeUnderMouse, _nodeUnderMouse.isEnabled?_highlightedNodeColor:_highlightedDisabledNodeColor);
         }
 
         //if we are still not hovering over a node, we are done
@@ -160,11 +186,11 @@ public abstract class NodeGraph : Canvas {
         //it saves a lot of hassles and the trouble of building a complete event system
 
         if (Input.GetKey(Key.LEFT_SHIFT) || Input.GetKey(Key.RIGHT_SHIFT)) {
-            if (Input.GetMouseButtonUp(0)) OnNodeShiftLeftClicked(_nodeUnderMouse);
-            if (Input.GetMouseButtonUp(1)) OnNodeShiftRightClicked(_nodeUnderMouse);
+            if (Input.GetMouseButtonUp(0)) OnNodeShiftLeftClicked?.Invoke(_nodeUnderMouse);
+            if (Input.GetMouseButtonUp(1)) OnNodeShiftRightClicked?.Invoke(_nodeUnderMouse);
         } else {
-            if (Input.GetMouseButtonUp(0)) OnNodeLeftClicked(_nodeUnderMouse);
-            if (Input.GetMouseButtonUp(1)) OnNodeRightClicked(_nodeUnderMouse);
+            if (Input.GetMouseButtonUp(0)) OnNodeLeftClicked?.Invoke(_nodeUnderMouse);
+            if (Input.GetMouseButtonUp(1)) OnNodeRightClicked?.Invoke(_nodeUnderMouse);
         }
     }
 
@@ -178,5 +204,34 @@ public abstract class NodeGraph : Canvas {
         float dy = pNode.location.Y - Input.mouseY;
         var mouseToNodeDistanceSqr = dx * dx + dy * dy;
         return mouseToNodeDistanceSqr < nodeSize * nodeSize;
+    }
+
+    /// <summary>
+    /// Checks if the graph is fully connected
+    /// </summary>
+    /// <returns><code>true</code> if the graph is fully connected, <code>false</code> otherwise</returns>
+    public bool CheckGraphFullyConnected() {
+        HashSet<Node> allActiveNodes = new HashSet<Node>();
+        HashSet<Node> visited = new HashSet<Node>();
+        Node firstActiveNode = null;
+        foreach (var node in nodes) {
+            if (!node.isEnabled)
+                continue;
+            
+            allActiveNodes.Add(node);
+            if (firstActiveNode == null) 
+                firstActiveNode = node;
+        }
+        DFS(firstActiveNode, visited);
+        return visited.Count == allActiveNodes.Count;
+    }
+
+    private void DFS(Node node, HashSet<Node> visited) {
+        visited.Add(node);
+        foreach (Node adjacent in node.connections) {
+            if(visited.Contains(adjacent) || !adjacent.isEnabled)
+                continue;
+            DFS(adjacent, visited);
+        }
     }
 }

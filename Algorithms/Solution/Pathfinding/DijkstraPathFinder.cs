@@ -21,7 +21,8 @@ namespace application {
 
             // initialize the data structures;
             foreach (Node node in _nodeGraph.nodes) {
-                nodes.Add(node);
+                if(node.isEnabled) 
+                    nodes.Add(node);
                 distance.Add(node, float.MaxValue);
             }
 
@@ -83,8 +84,9 @@ namespace application {
             Node parent = previous[target];
             while (true) {
                 path.Insert(0, parent);
-                if (!previous.ContainsKey(parent))
+                if (!previous.ContainsKey(parent)) {
                     break;
+                }
                 parent = previous[parent];
             }
 
