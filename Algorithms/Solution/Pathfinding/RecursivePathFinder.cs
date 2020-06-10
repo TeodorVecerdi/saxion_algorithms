@@ -13,7 +13,7 @@ namespace application {
             queue.Enqueue(start);
 
             // Walk the graph and 'build' the parentDictionary
-            RecursiveBFS(queue, visited, parentDictionary);
+            RecursiveBFS(target, queue, visited, parentDictionary);
 
             // If the target node doesn't have a parent it means there is no path.
             if (!parentDictionary.ContainsKey(target))
@@ -33,7 +33,7 @@ namespace application {
             return path;
         }
 
-        private void RecursiveBFS(Queue<Node> queue, HashSet<Node> visited, Dictionary<Node, Node> parentDictionary) {
+        private void RecursiveBFS(Node target, Queue<Node> queue, HashSet<Node> visited, Dictionary<Node, Node> parentDictionary) {
             if (queue.Count == 0)
                 return;
 
@@ -48,7 +48,12 @@ namespace application {
                 visited.Add(adjacent);
             }
 
-            RecursiveBFS(queue, visited, parentDictionary);
+            if (current == target) {
+                queue.Clear();
+                return;
+            }
+
+            RecursiveBFS(target, queue, visited, parentDictionary);
         }
     }
 }

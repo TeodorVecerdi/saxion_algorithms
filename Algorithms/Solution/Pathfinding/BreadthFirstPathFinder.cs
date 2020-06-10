@@ -5,7 +5,7 @@ namespace application {
         public BreadthFirstPathFinder(NodeGraph pGraph) : base(pGraph) { }
         protected override List<Node> generate(Node start, Node target) {
             // Walk the graph and 'build' the parentDictionary
-            Dictionary<Node, Node> parentDictionary = BFS(start);
+            Dictionary<Node, Node> parentDictionary = BFS(start, target);
 
             // If the target node doesn't have a parent it means there is no path.
             if (!parentDictionary.ContainsKey(target))
@@ -24,7 +24,7 @@ namespace application {
             return path;
         }
 
-        private Dictionary<Node, Node> BFS(Node start) {
+        private Dictionary<Node, Node> BFS(Node start, Node target) {
             Dictionary<Node, Node> parentDictionary = new Dictionary<Node, Node>();
             Queue<Node> queue = new Queue<Node>();
             HashSet<Node> visited = new HashSet<Node>();
@@ -41,6 +41,9 @@ namespace application {
                     queue.Enqueue(adjacent);
                     visited.Add(adjacent);
                 }
+
+                if (current == target)
+                    return parentDictionary;
             }
             
             return parentDictionary;
