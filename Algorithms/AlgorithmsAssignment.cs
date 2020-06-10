@@ -28,10 +28,10 @@ namespace application {
         PathFinder _pathFinder = null;
 
         //common settings
-        private const int SCALE = 15; //TODO: experiment with changing this
-        private const int MIN_ROOM_SIZE = 8; //TODO: use this setting in your dungeon generator
+        private const int SCALE = 10; //TODO: experiment with changing this
+        private const int MIN_ROOM_SIZE = 10; //TODO: use this setting in your dungeon generator
 
-        public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false) {
+        public AlgorithmsAssignment() : base(1280, 720, false, true, -1, -1, false) {
             Debug.EnableFileLogger(true);
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -178,10 +178,8 @@ namespace application {
             //Assignment 3.1 Sufficient (Mandatory) - BreadthFirst Pathfinding
             //
             //TODO: Comment out the RecursivePathFinder above, implement a BreadthFirstPathFinder and uncomment it below
-            _pathFinder = new BreadthFirstPathFinder(_graph);
 
             //TODO: Implement a PathFindingAgent that uses one of your pathfinder implementations (should work with any pathfinder implementation)
-            _agent = new PathFindingAgent(_graph, _pathFinder);
 
             /////////////////////////////////////////////////
             //Assignment 3.2 Good & 3.3 Excellent (Optional)
@@ -191,6 +189,10 @@ namespace application {
             //For example for A*, you must choose a setup in which it is possible to demonstrate your 
             //algorithm works. Find the best place to add your code, and don't forget to move the
             //PathFindingAgent below the creation of your PathFinder!
+            
+            // _pathFinder = new BreadthFirstPathFinder(_graph);
+            _pathFinder = new DijkstraPathFinder(_graph);
+            _agent = new PathFindingAgent(_graph, _pathFinder);
 
             //------------------------------------------------------------------------------------------
             // REQUIRED BLOCK OF CODE TO ADD ALL OBJECTS YOU CREATED TO THE SCREEN IN THE CORRECT ORDER
