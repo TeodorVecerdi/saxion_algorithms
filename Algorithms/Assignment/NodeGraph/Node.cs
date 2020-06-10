@@ -20,7 +20,7 @@ public class Node {
     //what other data could/should you add here to implement the required pathfinding algorithms?
 
     //Every node has a id that we can display on screen for debugging
-    public readonly string id;
+    public readonly int id;
     private static int lastID = 0;
 
     /**
@@ -32,10 +32,10 @@ public class Node {
         location = pLocation;
 
         //use an autoincrementing id as label
-        id = "" + lastID++;
+        id = lastID++;
     }
 
     public override string ToString() {
-        return id;
+        return $"Node[{id}, {location}]";
     }
 }
