@@ -21,11 +21,11 @@ namespace application {
         }
 
         private Node[,] GenerateNodes() {
-            var (rooms, doors, hallways) = dungeon.DungeonData;
+            (Dictionary<int, RoomDefinition> rooms, Dictionary<int, DoorDefinition> doors, Dictionary<int, HallwayDefinition> hallways) = dungeon.DungeonData;
             Node[,] nodes = new Node[dungeon.size.Width, dungeon.size.Height];
 
             // loop through the rooms and create a node for each room
-            foreach (var room in rooms.Values) {
+            foreach (RoomDefinition room in rooms.Values) {
                 Rectangle center = room.Area;
                 center.Inflate(-1, -1); // shrinks the room by 1 in all directions
 
@@ -36,12 +36,12 @@ namespace application {
             }
 
             // loop through the doors and create the necessary connections and nodes
-            foreach (var door in doors.Values) {
+            foreach (DoorDefinition door in doors.Values) {
                 nodes[door.Position.X, door.Position.Y] = new Node(GetPointCenter(new Point(door.Position.X, door.Position.Y)));
             }
 
             // loop through the hallways and create the necessary connections and nodes
-            foreach (var hallway in hallways.Values) {
+            foreach (HallwayDefinition hallway in hallways.Values) {
                 if (hallway.Direction == Direction.Horizontal)
                     for (int i = hallway.Start.X; i <= hallway.End.X; i++)
                         nodes[i, hallway.Start.Y] = new Node(GetPointCenter(new Point(i, hallway.Start.Y)));
@@ -106,8 +106,8 @@ namespace application {
         /// <param name="room">room definition</param>
         /// <returns>the location of the center of the given room you can use for your nodes in this class</returns>
         private Point GetRoomCenter(RoomDefinition room) {
-            var centerX = ((room.Area.Left + room.Area.Right + 1) / 2.0f) * dungeon.scale;
-            var centerY = ((room.Area.Top + room.Area.Bottom + 1) / 2.0f) * dungeon.scale;
+            float centerX = ((room.Area.Left + room.Area.Right + 1) / 2.0f) * dungeon.scale;
+            float centerY = ((room.Area.Top + room.Area.Bottom + 1) / 2.0f) * dungeon.scale;
             return new Point((int) centerX, (int) centerY);
         }
 
@@ -126,8 +126,8 @@ namespace application {
         /// <param name="location">point</param>
         /// <returns>the location of the center of the given point you can use for your nodes in this class</returns>
         private Point GetPointCenter(Point location) {
-            var centerX = (location.X + 0.5f) * dungeon.scale;
-            var centerY = (location.Y + 0.5f) * dungeon.scale;
+            float centerX = (location.X + 0.5f) * dungeon.scale;
+            float centerY = (location.Y + 0.5f) * dungeon.scale;
             return new Point((int) centerX, (int) centerY);
         }
     }

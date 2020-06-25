@@ -15,7 +15,7 @@ namespace application {
             this.pathfinder = pathfinder;
             
             if (nodeGraph.nodes.Count > 0) {
-                var node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
+                Node node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
                 base.jumpToNode(node);
                 currentNode = node;
                 reachedCurrentTarget = true;
@@ -32,7 +32,7 @@ namespace application {
             
             // i starts from 2 because we ignore the starting node (because we're already there)
             // and because we set the first node in the path as the current target
-            for(var i = 2; i < pathList.Count; i++)
+            for(int i = 2; i < pathList.Count; i++)
                 pathQueue.Enqueue(pathList[i]);
             path = pathQueue;
             reachedCurrentTarget = false;

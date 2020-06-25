@@ -95,15 +95,7 @@ namespace application {
             //TODO: Comment out GoodDungeon above, implement an ExcellentDungeon class, and uncomment it below
 
             //_dungeon = new ExcellentDungeon(size);
-            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good, 212212);
-
-            if (_dungeon != null) {
-                //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
-                _dungeon.scale = SCALE;
-
-                //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
-                _dungeon.Generate(MIN_ROOM_SIZE);
-            }
+            
 
             /////////////////////////////////////////////////////////////////////////////////////////
             // ASSIGNMENT 2 : GRAPHS, AGENTS & TILES
@@ -119,9 +111,7 @@ namespace application {
             //TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
             //_graph = new SampleDungeonNodeGraph(_dungeon);
-            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
-            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
-            if (_graph != null) _graph.Generate();
+            
 
             /////////////////////////////////////////////////////////////
             //Assignment 2.1 Sufficient (Mandatory) OffGraphWayPointAgent
@@ -142,8 +132,7 @@ namespace application {
             //TODO: Comment out the SampleTiledView again, implement the TiledDungeonView	and uncomment it below
 
             // _tiledView = new SampleTiledView(_dungeon, TileType.GROUND);
-            _tiledView = new TiledDungeonView(_dungeon as NiceDungeon, TileType.WALL);
-            if (_tiledView != null) _tiledView.Generate();
+            
 
             ////////////////////////////////////////////////////////////
             //Assignment 2.2 Good (Optional) OnGraphWayPointAgent
@@ -189,10 +178,28 @@ namespace application {
             //algorithm works. Find the best place to add your code, and don't forget to move the
             //PathFindingAgent below the creation of your PathFinder!
 
-            // _pathFinder = new BreadthFirstPathFinder(_graph);
+            _dungeon = new NiceDungeon(size, SCALE, DungeonType.Excellent | DungeonType.Good, 212212);
+            if (_dungeon != null) {
+                //assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
+                _dungeon.scale = SCALE;
+                //Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
+                _dungeon.Generate(MIN_ROOM_SIZE);
+            }
+            
+            _graph = new LowLevelNodeGraph(_dungeon as NiceDungeon);
+            // _graph = new HighLevelNodeGraph(_dungeon as NiceDungeon);
+            if (_graph != null) _graph.Generate();
+            
+            _tiledView = new TiledDungeonView(_dungeon as NiceDungeon, TileType.WALL);
+            if (_tiledView != null) _tiledView.Generate();
+            
+            _pathFinder = new BreadthFirstPathFinder(_graph);
+            // _pathFinder = new RecursivePathFinder(_graph);
             // _pathFinder = new DijkstraPathFinder(_graph);
-            _pathFinder = new AStarPathFinder(_graph, HeuristicFunction.Euclidean);
+            // _pathFinder = new AStarPathFinder(_graph, HeuristicFunction.Euclidean);
             _agent = new PathFindingAgent(_graph, _pathFinder);
+            // _agent = new OffGraphWayPointAgent(_graph);
+            // _agent = new OnGraphWayPointAgent(_graph);
 
             //------------------------------------------------------------------------------------------
             // REQUIRED BLOCK OF CODE TO ADD ALL OBJECTS YOU CREATED TO THE SCREEN IN THE CORRECT ORDER

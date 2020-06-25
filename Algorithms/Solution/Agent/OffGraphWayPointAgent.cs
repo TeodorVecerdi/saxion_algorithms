@@ -10,7 +10,7 @@ namespace application {
         public OffGraphWayPointAgent(NodeGraph nodeGraph) : base(nodeGraph) {
             //position ourselves on a random node
             if (nodeGraph.nodes.Count > 0) {
-                var node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
+                Node node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
                 base.jumpToNode(node);
                 currentTarget = node;
                 reachedTarget = true;
@@ -27,7 +27,7 @@ namespace application {
 
         protected override void Update() {
             if (reachedTarget) {
-                var node = TryGetNode();
+                Node node = TryGetNode();
                 if(node == null) return;
                 currentTarget = node;
                 reachedTarget = false;
@@ -42,7 +42,7 @@ namespace application {
             while (true) {
                 if (queuedNodes.Count == 0) 
                     return null;
-                var node = queuedNodes.Dequeue();
+                Node node = queuedNodes.Dequeue();
                 if (currentTarget.connections.Contains(node))
                     return node;
             }

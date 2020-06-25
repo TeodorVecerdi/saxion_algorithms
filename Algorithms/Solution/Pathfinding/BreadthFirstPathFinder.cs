@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace application {
     internal class BreadthFirstPathFinder : PathFinder {
         public BreadthFirstPathFinder(NodeGraph pGraph) : base(pGraph) { }
+
         protected override List<Node> generate(Node start, Node target) {
             // Walk the graph and 'build' the parentDictionary
             Dictionary<Node, Node> parentDictionary = BFS(start, target);
@@ -17,10 +18,11 @@ namespace application {
             Node parent = parentDictionary[target];
             while (true) {
                 path.Insert(0, parent);
-                if (!parentDictionary.ContainsKey(parent)) 
+                if (!parentDictionary.ContainsKey(parent))
                     break;
                 parent = parentDictionary[parent];
             }
+
             return path;
         }
 
@@ -28,14 +30,15 @@ namespace application {
             Dictionary<Node, Node> parentDictionary = new Dictionary<Node, Node>();
             Queue<Node> queue = new Queue<Node>();
             HashSet<Node> visited = new HashSet<Node>();
-            
+
             queue.Enqueue(start);
             visited.Add(start);
-            
+
             while (queue.Count > 0) {
                 Node current = queue.Dequeue();
+
                 foreach (Node adjacent in current.connections) {
-                    if(visited.Contains(adjacent))
+                    if (visited.Contains(adjacent))
                         continue;
                     parentDictionary.Add(adjacent, current);
                     queue.Enqueue(adjacent);
@@ -45,7 +48,7 @@ namespace application {
                 if (current == target)
                     return parentDictionary;
             }
-            
+
             return parentDictionary;
         }
     }

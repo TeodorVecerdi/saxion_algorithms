@@ -51,7 +51,7 @@ public abstract class NodeGraph : Canvas {
         application.utils.Debug.Log("-----------------------------------------------------------------------------");
 
         
-        /*// Disable a node
+        // Disable a node
         OnNodeShiftLeftClicked += node => {
             node.isEnabled = false;
             bool isConnected = CheckGraphFullyConnected();
@@ -69,7 +69,7 @@ public abstract class NodeGraph : Canvas {
                 FullyConnectedStateChanged = true;
 
             IsFullyConnected = isConnected;
-        };*/
+        };
     }
 
     /**

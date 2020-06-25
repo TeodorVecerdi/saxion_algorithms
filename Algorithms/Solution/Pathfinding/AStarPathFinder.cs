@@ -31,6 +31,8 @@ namespace application {
 
         protected override List<Node> generate(Node start, Node target) {
             Dictionary<Node, Node> previous = AStar(start, target);
+            if (previous == null)
+                return null;
             List<Node> path = GetPath(previous, target);
             return path;
         }
@@ -56,6 +58,8 @@ namespace application {
             while (nodes.Count > 0) {
                 nodeCoverage++;
                 Node current = FindNodeWithMinimumDistance(nodes, distance, heuristic);
+                if (current == null)
+                    return null;
                 nodes.Remove(current);
 
                 // terminate the search early if we reached the target

@@ -12,7 +12,7 @@ namespace application {
         public OnGraphWayPointAgent(NodeGraph nodeGraph) : base(nodeGraph) {
             //position ourselves on a random node
             if (nodeGraph.nodes.Count > 0) {
-                var node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
+                Node node = nodeGraph.nodes[Rand.Range(0, nodeGraph.nodes.Count)];
                 base.jumpToNode(node);
                 currentTarget = node;
                 reachedCurrentTarget = true;
@@ -43,7 +43,7 @@ namespace application {
                 }
                 
                 // otherwise go to a new node 
-                var node = TryGetNode();
+                Node node = TryGetNode();
                 previousTarget = currentTarget;
                 currentTarget = node;
             }
